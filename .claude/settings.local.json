@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find C:/Workspaces/GitHub/aderegil/claude-certified-architect -type d -name *course*)",
+      "Bash(python -c \":*)",
+      "WebSearch",
+      "WebFetch(domain:pypi.org)"
+    ]
+  }
+}
