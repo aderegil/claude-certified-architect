@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv README.md README.md.bak)",
+      "Bash(mv CLAUDE.md README.md)",
+      "Bash(git add:*)"
+    ]
+  }
+}
