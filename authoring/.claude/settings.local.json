@@ -5,7 +5,25 @@
       "Bash(mv CLAUDE.md README.md)",
       "Bash(git add:*)",
       "Bash(git push:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(git branch:*)",
+      "Bash(mkdir -p authoring/docs authoring/reference_lab)",
+      "Bash(mv authoring/CCA_Exam_Guide.md authoring/CCA_Exam_Guide.pdf authoring/CCA_Lab_Plan.md authoring/CCA_Lab_Reference.md authoring/CCA_Lab_Reference.docx authoring/docs/)",
+      "Bash(cd:*)",
+      "Bash(git config:*)",
+      "Bash(git remote:*)",
+      "Bash(gh api:*)",
+      "Bash(git filter-branch:*)",
+      "Bash(git stash:*)",
+      "Bash(git fsck:*)",
+      "Bash(for commit:*)",
+      "Bash(do echo:*)",
+      "Bash(git show:*)",
+      "Bash(done)",
+      "Bash(git log:*)",
+      "Bash(git cat-file:*)",
+      "Bash(cp:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

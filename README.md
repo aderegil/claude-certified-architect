@@ -20,6 +20,9 @@ Each lab is self-contained. Start any lab in any order.
 
 ```bash
 cd 0X_lab_name
+python -m venv .venv
+source .venv/bin/activate   # macOS/Linux
+.venv\Scripts\activate      # Windows
 cp .env.example .env        # add your ANTHROPIC_API_KEY
 pip install -r requirements.txt
 python main.py              # run the lab
