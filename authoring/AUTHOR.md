@@ -194,6 +194,12 @@ messages = build_messages(history, prompt)
 response = client.messages.create(messages=messages)
 ```
 
+**Mock data in separate files** — never inline mock data in Python code. Put it in a dedicated data file (e.g., `data.py`, `data.json`) and import/load from there.
+
+**Use the Anthropic SDK** — always use the `anthropic` Python SDK (`import anthropic`). Never make manual REST calls to the Claude API.
+
+**Decorators for tools** — define tools using decorators, not raw dict schemas.
+
 **Additional conventions:**
 - Functions over classes
 - Comments only where they clarify an exam concept — not obvious code

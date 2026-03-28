@@ -3,7 +3,9 @@
     "allow": [
       "Bash(mv README.md README.md.bak)",
       "Bash(mv CLAUDE.md README.md)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(git checkout:*)"
     ]
   }
 }
