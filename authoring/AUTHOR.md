@@ -263,9 +263,18 @@ response = client.messages.create(messages=messages)
 
 **Use the Anthropic SDK** — always use the `anthropic` Python SDK (`import anthropic`). Never make manual REST calls to the Claude API.
 
-**Tool definitions use raw schema dicts** — define the Python function separately, then define a companion `_schema` dict with `name`, `description`, and `input_schema`. This is the official stable pattern from the Anthropic SDK and the Academy courses. See `courses/Building with the Claude API/06 Tools use with Claude/` for canonical examples.
+**Tool definitions depend on the lab's platform** — the exam guide specifies which platform each scenario uses. Match the tool pattern to the platform:
+
+| Platform | Tool pattern | Reference | Labs |
+|----------|-------------|-----------|------|
+| **Claude API** | Function + companion `_schema` dict (`name`, `description`, `input_schema`) | `courses/Building with the Claude API/06 Tools use with Claude/` | L06 |
+| **Claude Agent SDK / MCP** | `FastMCP` + `mcp.tool()` decorator + Pydantic `Field` for parameter descriptions | `courses/Building with the Claude API/09 Model Context Protocol/cli_project_COMPLETE/` and `10 Anthropic Apps/app_starter/` | L01, L03, L04 |
+| **Claude Code** | No tool definitions — labs configure Claude Code, not code tools | N/A | L02, L05 |
+
 - Do **not** use `@beta_tool` from the `anthropic` SDK — it is experimental and may break between versions.
-- Do **not** use `@tool` from `claude-agent-sdk` — that is a separate package for agentic/MCP workflows, not covered in these labs yet.
+- Do **not** mix patterns within a lab — pick the one that matches the platform.
+
+> ⚠ **Known debt:** Labs 01 and 03 were built before Agent SDK course materials were available and currently use the `_schema` dict pattern instead of the MCP/decorator pattern. To be migrated in a future pass.
 
 ### Prompts
 
