@@ -1,0 +1,4 @@
+anthropic
+python-dotenv
+mcp[cli]
+mcp-server-fetch

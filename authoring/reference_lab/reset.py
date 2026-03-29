@@ -5,10 +5,10 @@ import zipfile
 
 def main():
     lab_dir = os.path.dirname(os.path.abspath(__file__))
-    starter_zip = os.path.join(lab_dir, ".starter.zip")
+    starter_zip = os.path.join(lab_dir, "reset.zip")
     env_file = os.path.join(lab_dir, ".env")
 
-    # Restore starter files from .starter.zip
+    # Restore starter files from reset.zip
     if os.path.exists(starter_zip):
         with zipfile.ZipFile(starter_zip, "r") as z:
             z.extractall(lab_dir)
@@ -16,7 +16,7 @@ def main():
         for name in restored:
             print(f"Restored {name}")
     else:
-        print("Warning: .starter.zip not found — cannot restore starter files.")
+        print("Warning: reset.zip not found — cannot restore starter files.")
 
     # Remove .env if it exists (student recreates from .env.example)
     if os.path.exists(env_file):

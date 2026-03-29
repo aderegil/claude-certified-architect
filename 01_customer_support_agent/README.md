@@ -66,7 +66,7 @@ Type `1` to run the first test query (an order status check for Maria Santos).
 - Tool results are appended to the conversation history so the model can reason about them on the next iteration
 - `case_facts` prints on each iteration — currently "No facts collected yet." (you'll populate this in Step 7)
 
-**Exam concept:** The agentic loop lifecycle — `stop_reason == "tool_use"` means continue, `"end_turn"` means stop. The model drives decision-making about which tool to call next; there is no pre-configured decision tree. (Task 1.1)
+**Exam concept:** The agentic loop lifecycle — `stop_reason == "tool_use"` means continue, `"end_turn"` means stop. The model drives decision-making about which tool to call next; there is no pre-configured decision tree. [Task 1.1]
 
 ### Step 4 — Complete the prerequisite gate
 
@@ -106,7 +106,7 @@ Re-run with query `2`. The behavior should be the same because the model already
 
 #### 4.5 Exam concept
 
-Programmatic enforcement (hooks, prerequisite gates) vs prompt-based guidance. When deterministic compliance is required — like identity verification before financial operations — prompt instructions alone are insufficient. (Task 1.4)
+Programmatic enforcement (hooks, prerequisite gates) vs prompt-based guidance. When deterministic compliance is required — like identity verification before financial operations — prompt instructions alone are insufficient. [Task 1.4]
 
 ### Step 5 — Complete the PostToolUse hook
 
@@ -148,7 +148,7 @@ Re-run with query `3`.
 
 #### 5.5 Exam concept
 
-PostToolUse hooks provide deterministic guarantees that prompt instructions cannot. The hook enforces compliance (refunds > $500 are always blocked) while the structured error response (`errorCategory`, `isRetryable`) gives the agent the information it needs to recover appropriately. (Tasks 1.5, 2.2)
+PostToolUse hooks provide deterministic guarantees that prompt instructions cannot. The hook enforces compliance (refunds > $500 are always blocked) while the structured error response (`errorCategory`, `isRetryable`) gives the agent the information it needs to recover appropriately. [Tasks 1.5, 2.2]
 
 ### Step 6 — Observe escalation criteria and few-shot examples
 
@@ -180,7 +180,7 @@ I bought a gift for my friend under my account CUST-1001, and they want to retur
 
 #### 6.5 Exam concept
 
-Explicit escalation criteria with few-shot examples in the system prompt. Sentiment-based escalation is an unreliable proxy for case complexity. Few-shot examples are the most effective technique for consistent output when instructions alone produce ambiguous behavior. (Task 5.2, 4.2)
+Explicit escalation criteria with few-shot examples in the system prompt. Sentiment-based escalation is an unreliable proxy for case complexity. Few-shot examples are the most effective technique for consistent output when instructions alone produce ambiguous behavior. [Tasks 5.2, 4.2]
 
 ### Step 7 — Add persistent case_facts with Claude Code
 
@@ -218,18 +218,18 @@ After Claude Code makes the changes, re-run with query `2` (Maria Santos refund)
 
 #### 7.4 Exam concept
 
-Persistent fact extraction — amounts, dates, order numbers — into a structured block outside summarized history prevents loss during progressive summarization. Tool results accumulate tokens disproportionately to their relevance; `case_facts` extracts only the fields that matter. The system prompt uses an XML-tagged section with a template variable — no string manipulation. (Task 5.1)
+Persistent fact extraction — amounts, dates, order numbers — into a structured block outside summarized history prevents loss during progressive summarization. Tool results accumulate tokens disproportionately to their relevance; `case_facts` extracts only the fields that matter. The system prompt uses an XML-tagged section with a template variable — no string manipulation. [Task 5.1]
 
 ### Step 8 — Explore tool design and distribution
 
 Before finishing, review how the tools are designed in `tools.py`:
 
-- Each tool has a clear, differentiated description — `get_customer` for identity lookup, `lookup_order` for order details, `process_refund` for refunds, `escalate_to_human` for escalation. No ambiguous overlap. (Task 2.1)
-- The agent has exactly 4 tools — a focused set for its role. Giving an agent 18 tools degrades selection reliability. (Task 2.3)
-- Error responses use `errorCategory` and `isRetryable` — the agent knows whether to retry or take a different action. (Task 2.2)
-- Tool descriptions include input formats, boundaries, and when to use each tool versus alternatives. (Task 2.1)
+- Each tool has a clear, differentiated description — `get_customer` for identity lookup, `lookup_order` for order details, `process_refund` for refunds, `escalate_to_human` for escalation. No ambiguous overlap. [Task 2.1]
+- The agent has exactly 4 tools — a focused set for its role. Giving an agent 18 tools degrades selection reliability. [Task 2.3]
+- Error responses use `errorCategory` and `isRetryable` — the agent knows whether to retry or take a different action. [Task 2.2]
+- Tool descriptions include input formats, boundaries, and when to use each tool versus alternatives. [Task 2.1]
 
-**Exam concept:** Tool descriptions are the primary mechanism the model uses for tool selection. Descriptions must differentiate each tool's purpose, inputs, outputs, and when to use it versus alternatives. Too many tools degrades selection reliability. (Tasks 2.1, 2.3)
+**Exam concept:** Tool descriptions are the primary mechanism the model uses for tool selection. Descriptions must differentiate each tool's purpose, inputs, outputs, and when to use it versus alternatives. Too many tools degrades selection reliability. [Tasks 2.1, 2.3]
 
 ## Reset
 
@@ -243,4 +243,4 @@ This restores all modified files (`main.py`) to their original starter state wit
 
 ---
 
-*v0.1 — 3/28/2026 — Alfredo de Regil*
+*v0.1 — 3/28/2026 — Alfredo De Regil*
