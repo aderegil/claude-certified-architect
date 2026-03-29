@@ -5,11 +5,11 @@ Read this before building or modifying any lab.
 
 ## Reference documents
 
-### Exam references (`docs/`)
+### Exam references (in this `authoring/` folder)
 
-- `docs/CCA_Lab_Plan.md` — the blueprint for all 6 labs: what to build, files, key concepts, what to observe
-- `docs/CCA_Lab_Reference.md` — full mapping of all 27 task statements to labs (both perspectives)
-- `docs/CCA_Exam_Guide.md` — source of truth for all terminology, task statements, knowledge and skills
+- `CCA_Lab_Plan.md` — the blueprint for all 6 labs: what to build, files, key concepts, what to observe
+- `CCA_Lab_Reference.md` — full mapping of all 27 task statements to labs (both perspectives)
+- `CCA_Exam_Guide.md` — source of truth for all terminology, task statements, knowledge and skills
 
 Always use exam guide terminology verbatim. Never paraphrase concepts from the guide.
 
@@ -96,12 +96,12 @@ Every README starts from zero and walks through every action:
 
 When asked to build Lab 0X:
 
-1. **Read the lab plan** — read `authoring/CCA_Lab_Plan.md`, find the section for that lab. Note the scenario, domains, task statement IDs, files, and key concepts.
-2. **Study the exam guide** — read `authoring/CCA_Exam_Guide.md`. For each task statement listed in the lab plan, read the full task statement text, its associated knowledge statements, and its skills statements. Extract:
+1. **Read the lab plan** — read `CCA_Lab_Plan.md`, find the section for that lab. Note the scenario, domains, task statement IDs, files, and key concepts.
+2. **Study the exam guide** — read `CCA_Exam_Guide.md`. For each task statement listed in the lab plan, read the full task statement text, its associated knowledge statements, and its skills statements. Extract:
    - The **exact terminology** the exam uses (e.g., `stop_reason`, `tool_use`, `end_turn`, `errorCategory`, `isRetryable`) — use these verbatim in code, comments, and README.
    - The **concepts the student must understand** — these drive what the lab demonstrates and what the README asks the student to observe.
    - The **skills the student must practice** — these drive what the lab asks the student to do (complete, complement, or configure).
-3. **Cross-reference with the lab reference** — read `authoring/CCA_Lab_Reference.md` to confirm which task statements map to this lab and verify nothing is missed.
+3. **Cross-reference with the lab reference** — read `CCA_Lab_Reference.md` to confirm which task statements map to this lab and verify nothing is missed.
 4. **Create the lab folder** at the repo root following the plan exactly.
 5. **Apply all coding conventions** (see below).
 6. **Design a coherent progression** — before writing any code, outline the lab steps as a narrative arc:
@@ -126,7 +126,7 @@ claude-certified-architect/
   README.md                        ← project overview, loaded by Claude Code at repo root
   authoring/                       ← authoring workspace, not for students
     AUTHOR.md                      ← authoring instructions (this file)
-    docs/                          ← exam guide, lab plan, lab reference
+    CCA_*.md/.pdf/.docx            ← exam guide, lab plan, lab reference
     courses/                       ← Anthropic Academy code references
     reference_lab/                 ← frozen Lab 01 snapshot
   01_customer_support_agent/       ← lab folders at root, for students
@@ -146,12 +146,12 @@ Every lab must contain these files:
   .gitignore          # ignores .env, .venv/, __pycache__/
   CLAUDE.md           # lab-specific instructions — loaded automatically by Claude Code
   README.md           # step-by-step lab guide, objectives, what to observe
-  .starter.zip        # snapshot of files with TODOs / files modified during the lab
+  reset.zip        # snapshot of files with TODOs / files modified during the lab
   .env.example        # required env vars with placeholder values
   requirements.txt    # pip install -r requirements.txt
   config.py           # constants: model name, thresholds, policy values
   main.py             # starter script — the thing the student runs
-  reset.py            # restores starter files from .starter.zip
+  reset.py            # restores starter files from reset.zip
 ```
 
 Additional files (e.g., `tools.py`, `agents.py`, `schema.py`, `sample_docs/`) as specified in the lab plan.
@@ -162,7 +162,7 @@ The student's experience must feel scoped to the lab folder:
 
 - **VSCode:** open the **lab folder** (e.g., `01_customer_support_agent/`) as the workspace — not the repo root.
 - **Claude Code:** launch from the **lab folder** terminal. This ensures Claude Code loads the lab's own `CLAUDE.md`.
-- **Every lab has its own `CLAUDE.md`** with the coding conventions and any lab-specific instructions Claude Code needs. Do not rely on the repo-root `CLAUDE.md` — the student will never open the repo root as a workspace.
+- **Every lab has its own `CLAUDE.md`** with the coding conventions and any lab-specific instructions Claude Code needs. Do not rely on the repo-root `README.md` — the student will never open the repo root as a workspace.
 
 The student should never need to think about files outside their lab folder.
 
@@ -222,7 +222,7 @@ How to reset and try again.
 
 ---
 
-*v0.1 — 3/15/2026 — Alfredo de Regil*
+*v0.1 — 3/15/2026 — Alfredo De Regil*
 ```
 
 ## Coding conventions
@@ -235,7 +235,7 @@ Apply these to every Python file without exception.
 ```python
 # filename.py - Short description of the file's purpose
 ```
-No author name in file headers. Author credit goes only in the README footer (`*v0.1 — date — Alfredo de Regil*`). Reference Lab 01's files as the canonical example.
+No author name in file headers. Author credit goes only in the README footer (`*v0.1 — date — Alfredo De Regil*`). Reference Lab 01's files as the canonical example.
 
 **Mock data in separate files** — never inline mock data in Python code. Put it in a dedicated data file (e.g., `data.py`, `data.json`) and import/load from there.
 
@@ -257,13 +257,15 @@ messages = build_messages(history, prompt)
 response = client.messages.create(messages=messages)
 ```
 
-**Comments** — only where they clarify an exam concept, not obvious code. Always reference the exam guide task statement where relevant (e.g., `# task 1.1 — agentic loop: check stop_reason`).
+**Comments** — only where they clarify an exam concept, not obvious code. Always reference the exam guide task statement where relevant (e.g., `# [Task 1.1] agentic loop: check stop_reason`).
 
 ### API and tools
 
 **Use the Anthropic SDK** — always use the `anthropic` Python SDK (`import anthropic`). Never make manual REST calls to the Claude API.
 
-**Tool definitions follow Anthropic Academy pattern** — define the Python function separately, then define a companion `_schema` dict with `name`, `description`, and `input_schema`. See `courses/Building with the Claude API/06 Tools use with Claude/` for canonical examples.
+**Tool definitions use raw schema dicts** — define the Python function separately, then define a companion `_schema` dict with `name`, `description`, and `input_schema`. This is the official stable pattern from the Anthropic SDK and the Academy courses. See `courses/Building with the Claude API/06 Tools use with Claude/` for canonical examples.
+- Do **not** use `@beta_tool` from the `anthropic` SDK — it is experimental and may break between versions.
+- Do **not** use `@tool` from `claude-agent-sdk` — that is a separate package for agentic/MCP workflows, not covered in these labs yet.
 
 ### Prompts
 
@@ -323,9 +325,9 @@ All lab data is **hardcoded mock data**. No databases, no external services, no 
 - **Self-contained:** everything the lab needs lives in its folder. The student can revisit the finished lab months later without restoring infrastructure.
 - **Focus:** the lab teaches exam concepts, not data management. Zero setup friction — clone, install, run.
 
-### .starter.zip
+### reset.zip
 
-At lab build time, create a `.starter.zip` in the lab folder containing **only** the files that:
+At lab build time, create a `reset.zip` in the lab folder containing **only** the files that:
 - Have `# TODO` sections the student fills in, OR
 - Get modified during the lab (e.g., via Claude Code prompts)
 
@@ -334,7 +336,7 @@ Static files that never change during the lab (`config.py`, `data.py`, `system_p
 ### reset.py
 
 Every `reset.py` must:
-- Restore starter files by extracting `.starter.zip` using `zipfile.extractall`, overwriting modified files
+- Restore starter files by extracting `reset.zip` using `zipfile.extractall`, overwriting modified files
 - Print each restored filename
 - Delete `.env` if it exists
 - Print a confirmation message
@@ -366,4 +368,4 @@ Add any other required env vars with placeholder values and a comment explaining
 
 ---
 
-*v0.1 — 3/15/2026 — Alfredo de Regil*
+*v0.1 — 3/15/2026 — Alfredo De Regil*

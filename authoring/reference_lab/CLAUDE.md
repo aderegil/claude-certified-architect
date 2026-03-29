@@ -21,16 +21,16 @@
 - `data.py` — mock customer and order data
 - `config.py` — MODEL, MAX_REFUND_AMOUNT, MAX_LOOP_ITERATIONS, ESCALATION_REASONS, console colors
 - `system_prompt.txt` — system prompt with escalation criteria, few-shot examples, and `{case_facts}` template variable
-- `reset.py` — restores starter files from `.starter.zip` and deletes `.env`
-- `.starter.zip` — pristine copies of files that have TODOs (main.py)
+- `reset.py` — restores starter files from `reset.zip` and deletes `.env`
+- `reset.zip` — pristine copies of files that have TODOs (main.py)
 - `.env.example` — copy to `.env` and add your ANTHROPIC_API_KEY
 - `requirements.txt` — anthropic, python-dotenv
 
 ## Key exam concepts in this lab
 
-- Agentic loop: `stop_reason == "tool_use"` → execute → continue; `"end_turn"` → stop (task 1.1)
-- Programmatic prerequisite gate: `process_refund` blocked until `get_customer` has run (task 1.4)
-- PostToolUse hook: intercepts refunds > $500, returns structured error (task 1.5)
-- Structured error responses: `errorCategory`, `isRetryable` (task 2.2)
-- Explicit escalation criteria with few-shot examples in system prompt (task 5.2)
-- Persistent `case_facts` block outside summarized history via prompt template variable (task 5.1)
+- Agentic loop: `stop_reason == "tool_use"` → execute → continue; `"end_turn"` → stop [Task 1.1]
+- Programmatic prerequisite gate: `process_refund` blocked until `get_customer` has run [Task 1.4]
+- PostToolUse hook: intercepts refunds > $500, returns structured error [Task 1.5]
+- Structured error responses: `errorCategory`, `isRetryable` [Task 2.2]
+- Explicit escalation criteria with few-shot examples in system prompt [Task 5.2]
+- Persistent `case_facts` block outside summarized history via prompt template variable [Task 5.1]

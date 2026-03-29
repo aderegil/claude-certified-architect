@@ -13,7 +13,11 @@
       "Bash(cp -r \"/c/Workspaces/GitHub/aderegil/claude-certified-architect_backup/authoring/courses/Building with the Claude API\" authoring/courses/)",
       "Bash(cp /c/Workspaces/GitHub/aderegil/claude-certified-architect_backup/authoring/reference_lab/* authoring/reference_lab/)",
       "Bash(cp /c/Workspaces/GitHub/aderegil/claude-certified-architect_backup/authoring/docs/* authoring/docs/)",
-      "Bash(cp -r /c/Workspaces/GitHub/aderegil/claude-certified-architect_backup/.claude /c/Workspaces/GitHub/aderegil/claude-certified-architect/)"
+      "Bash(cp -r /c/Workspaces/GitHub/aderegil/claude-certified-architect_backup/.claude /c/Workspaces/GitHub/aderegil/claude-certified-architect/)",
+      "WebSearch",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:pypi.org)",
+      "Bash(ls:*)"
     ]
   }
 }

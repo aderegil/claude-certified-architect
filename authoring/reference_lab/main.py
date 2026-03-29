@@ -22,12 +22,12 @@ def load_system_prompt():
 
 
 # --- Case facts ---
-# task 5.1 — extract verified facts from tool results so the model retains them
+# [Task 5.1] — extract verified facts from tool results so the model retains them
 # even when earlier conversation turns are summarized away
 
 
 # --- Prerequisite gate ---
-# task 1.4 — programmatic enforcement: block process_refund until get_customer has run
+# [Task 1.4] — programmatic enforcement: block process_refund until get_customer has run
 
 def check_prerequisite(tool_name, tool_history):
     """Block process_refund unless get_customer has already been called successfully."""
@@ -42,7 +42,7 @@ def check_prerequisite(tool_name, tool_history):
 
 
 # --- PostToolUse hook ---
-# task 1.5 — hook intercepts outgoing tool calls for compliance enforcement
+# [Task 1.5] — hook intercepts outgoing tool calls for compliance enforcement
 
 def post_tool_use_hook(tool_name, tool_input, tool_result):
     """Intercept tool results to enforce policy rules.
@@ -65,7 +65,7 @@ def post_tool_use_hook(tool_name, tool_input, tool_result):
 
 def execute_tool(tool_name, tool_input, tool_history):
     """Execute a tool call with prerequisite check and post-use hook."""
-    # task 1.4 — check prerequisite gate before execution
+    # [Task 1.4] — check prerequisite gate before execution
     gate_result = check_prerequisite(tool_name, tool_history)
     if gate_result is not None:
         print(f"  {RED}⛔ Gate blocked {tool_name}: prerequisite not met{RESET}")
@@ -85,7 +85,7 @@ def execute_tool(tool_name, tool_input, tool_history):
 
     raw_result = tool_fn(**tool_input)
 
-    # task 1.5 — apply PostToolUse hook after execution
+    # [Task 1.5] — apply PostToolUse hook after execution
     result = post_tool_use_hook(tool_name, tool_input, raw_result)
 
     # Track which tools have been called successfully
@@ -96,7 +96,7 @@ def execute_tool(tool_name, tool_input, tool_history):
 
 
 # --- Agentic loop ---
-# task 1.1 — agentic loop: stop_reason "tool_use" → execute → continue; "end_turn" → stop
+# [Task 1.1] — agentic loop: stop_reason "tool_use" → execute → continue; "end_turn" → stop
 
 def run_agent(user_message):
     """Run the agentic loop for a single user message."""
@@ -105,7 +105,7 @@ def run_agent(user_message):
 
     messages = [{"role": "user", "content": user_message}]
     tool_history = set()
-    # task 5.1 — case_facts: verified transactional facts injected into system prompt
+    # [Task 5.1] — case_facts: verified transactional facts injected into system prompt
     case_facts = "No facts collected yet."
 
     print(f"\n{CYAN}{BOLD}{'='*60}")
@@ -115,7 +115,7 @@ def run_agent(user_message):
     for iteration in range(MAX_LOOP_ITERATIONS):
         print(f"\n{DIM}--- Iteration {iteration + 1} ---{RESET}")
 
-        # task 5.1 — format system prompt template with current case_facts
+        # [Task 5.1] — format system prompt template with current case_facts
         system_prompt = system_template.format(case_facts=case_facts)
         print(f"  {DIM}case_facts: {case_facts}{RESET}")
 
@@ -129,7 +129,7 @@ def run_agent(user_message):
 
         print(f"  {DIM}stop_reason: {response.stop_reason}{RESET}")
 
-        # task 1.1 — check stop_reason to decide whether to continue or stop
+        # [Task 1.1] — check stop_reason to decide whether to continue or stop
         if response.stop_reason == "end_turn":
             # Extract the final text response
             for block in response.content:
@@ -162,7 +162,7 @@ def run_agent(user_message):
                 elif hasattr(block, "text") and block.text:
                     print(f"  {GREEN}Agent (thinking): {block.text}{RESET}")
 
-            # task 1.1 — append assistant response and tool results to conversation history
+            # [Task 1.1] — append assistant response and tool results to conversation history
             assistant_message = {"role": "assistant", "content": response.content}
             messages.append(assistant_message)
 

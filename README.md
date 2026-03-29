@@ -39,4 +39,4 @@ python reset.py             # reset state and try again
 
 ---
 
-*v0.1 — 3/15/2026 — Alfredo de Regil*
+*v0.1 — 3/15/2026 — Alfredo De Regil*
