@@ -7,7 +7,6 @@ import zipfile
 def main():
     lab_dir = os.path.dirname(os.path.abspath(__file__))
     starter_zip = os.path.join(lab_dir, "reset.zip")
-    env_file = os.path.join(lab_dir, ".env")
 
     # Restore starter files from reset.zip
     if os.path.exists(starter_zip):
@@ -37,11 +36,6 @@ def main():
         if os.path.exists(full_path):
             os.remove(full_path)
             print(f"Deleted {filepath}")
-
-    # Remove .env
-    if os.path.exists(env_file):
-        os.remove(env_file)
-        print("Deleted .env")
 
     print("\nReset complete. Follow the README to start again.")
 

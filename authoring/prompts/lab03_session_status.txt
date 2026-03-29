@@ -1,0 +1,56 @@
+Lab 03 — Session Status (2026-03-28)
+=====================================
+
+STATUS: All files written. Lab is complete but untested.
+
+BRANCH: adr/lab03continue
+
+WHAT WAS BUILT:
+- 03_multi_agent_research/ — full lab with 16 files
+- Platform: Claude Agent SDK (query, AgentDefinition, create_sdk_mcp_server, @tool)
+- Scenario: S3 — Multi-Agent Research System
+- Tasks covered: 1.2, 1.3, 1.6, 2.1, 2.2, 2.3, 5.1, 5.3, 5.6
+
+FILES CREATED:
+  main.py           — MCP tools (web_search, fetch_document), coordinator query(), interactive menu
+  agents.py         — 3 AgentDefinitions with TODO for tool restrictions
+  data.py           — 6 mock articles, 5 full documents, 1 timeout URL
+  config.py         — MODEL, ANSI colors
+  prompts/coordinator.txt      — coordinator system prompt
+  prompts/search_agent.txt     — search agent prompt
+  prompts/analysis_agent.txt   — analysis agent prompt
+  prompts/synthesis_agent.txt  — synthesis agent prompt
+  CLAUDE.md         — lab conventions for Claude Code
+  README.md         — step-by-step guide (Steps 0-7)
+  reset.py          — restores starter files
+  reset.zip         — main.py, agents.py, prompts/coordinator.txt, prompts/synthesis_agent.txt
+  .env.example      — ANTHROPIC_API_KEY placeholder
+  .gitignore        — .env, .venv/, __pycache__/
+  requirements.txt  — claude-agent-sdk, python-dotenv
+
+TODO SECTIONS IN STARTER CODE:
+  1. agents.py — Add tools=["mcp__research__web_search"] etc. to each AgentDefinition (Step 4)
+  2. main.py  — Replace generic timeout error with structured error response in fetch_document (Step 5)
+  3. prompts/ — Enhanced via Claude Code prompt in Step 6 (coverage gap annotation)
+
+README STEPS:
+  Step 0-2: Setup (open folder, venv, configure)
+  Step 3: Run starter, observe hub-and-spoke coordinator [Task 1.2]
+  Step 4: Complete tool distribution [Task 2.3]
+  Step 5: Handle structured error propagation [Tasks 2.2, 5.3]
+  Step 6: Add coverage gap annotation via Claude Code [Tasks 5.3, 5.6]
+  Step 7: Observe decomposition, context passing, provenance [Tasks 1.3, 1.6, 2.1, 5.1, 5.6]
+
+WHAT'S NEXT:
+  1. Review all files for correctness and convention compliance
+  2. Test run with actual API key (pip install claude-agent-sdk, python main.py)
+  3. Verify reset.py works (python reset.py → restores TODO versions)
+  4. Check README flow — does the narrative arc read as a story?
+  5. Commit when satisfied
+
+NOTES:
+  - Lab 01 uses WRONG SDK (Client SDK). Lab 03 uses correct Agent SDK per AUTHOR.md.
+  - No manual agentic loop — SDK handles it via query().
+  - MCP tools defined inline via @tool decorator + create_sdk_mcp_server().
+  - Subagents defined as AgentDefinition objects, spawned via Agent tool.
+  - Mock data is deterministic (keyword matching for search, dict lookup for documents).

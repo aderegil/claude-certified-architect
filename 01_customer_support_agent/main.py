@@ -119,13 +119,29 @@ def run_agent(user_message):
         system_prompt = system_template.format(case_facts=case_facts)
         print(f"  {DIM}case_facts: {case_facts}{RESET}")
 
-        response = client.messages.create(
-            model=MODEL,
-            max_tokens=1024,
-            system=system_prompt,
-            tools=ALL_TOOLS,
-            messages=messages,
-        )
+        try:
+            response = client.messages.create(
+                model=MODEL,
+                max_tokens=1024,
+                system=system_prompt,
+                tools=ALL_TOOLS,
+                messages=messages,
+            )
+        except Exception as e:
+            error_msg = str(e).lower()
+            if "credit" in error_msg or "balance" in error_msg:
+                print(f"\n{RED}{BOLD}API credit balance is too low.{RESET}")
+                print(f"{DIM}Add credits at https://console.anthropic.com{RESET}")
+            elif "usage limit" in error_msg or "rate limit" in error_msg:
+                # Extract the human-readable message from the error
+                import re
+                match = re.search(r'"message"\s*:\s*"([^"]+)"', str(e))
+                friendly_msg = match.group(1) if match else str(e)
+                print(f"\n{RED}{BOLD}{friendly_msg}{RESET}")
+                print(f"{DIM}Check your limits at https://console.anthropic.com{RESET}")
+            else:
+                print(f"\n{RED}{BOLD}Error: {e}{RESET}")
+            return
 
         print(f"  {DIM}stop_reason: {response.stop_reason}{RESET}")
 
@@ -186,7 +202,7 @@ def clear_screen():
 
 
 def show_menu(test_queries):
-    print(f"{BOLD}Customer Support Agent — Lab 01{RESET}\n")
+    print(f"{BOLD}Lab 01 — Customer Support Agent{RESET}\n")
     for i, query in enumerate(test_queries, 1):
         print(f"  {DIM}{i}. {query}{RESET}")
     print(f"  {DIM}c. Clear screen{RESET}")
@@ -200,6 +216,7 @@ def main():
         "I'd like a refund for order ORD-5501. The headphones arrived damaged.",
         "I'm James Chen, customer CUST-1002. I want a refund for my monitor order ORD-5503 — it has dead pixels.",
         "I've been going back and forth on this for days. I want to talk to a real person.",
+        "I'm Maria Santos, CUST-1001. My headphones from ORD-5501 arrived damaged and I need a refund. Also, can you check if my other order ORD-5502 has been delivered?",
     ]
 
     clear_screen()

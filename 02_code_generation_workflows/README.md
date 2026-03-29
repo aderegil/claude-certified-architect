@@ -406,7 +406,7 @@ If sample_app.py was modified by the previous steps, you can restore it from `re
 python -c "import zipfile; zipfile.ZipFile('reset.zip').extract('app/sample_app.py')"
 ```
 
-##### 8.3.1 Vague prompt
+#### 8.3.1 Vague prompt
 
 Start with a vague prompt in direct execution mode:
 
@@ -422,7 +422,7 @@ Claude Code may respond in one of two ways — both illustrate the problem with 
 
 Either way, cancel the response (`Escape`) or dismiss the question — do not let it proceed. You are going to retry with a better prompt.
 
-##### 8.3.2 Concrete examples
+#### 8.3.2 Concrete examples
 
 Now paste a prompt with explicit input/output examples:
 
@@ -482,7 +482,7 @@ Wait for Claude Code to create `scratch.md`. Then close the session (`/quit`).
 
 #### 9.3 Resume and observe
 
-##### 9.3.1 Make a change
+#### 9.3.1 Make a change
 
 Make a manual change to `app/sample_app.py` — add a new function at the bottom of the file:
 
@@ -501,7 +501,7 @@ def get_low_stock_products(threshold=5):
     return low_stock
 ```
 
-##### 9.3.2 Resume the session
+#### 9.3.2 Resume the session
 
 Run `claude --resume` to list your past sessions and select the one you just closed:
 
@@ -590,7 +590,7 @@ To reset the lab and try again:
 python reset.py
 ```
 
-This removes all generated config files (`.claude/`, `app/CLAUDE.md`, `coding_standards.md`, `.mcp.json`, `scratch.md`), restores `CLAUDE.md` to its starter state, and deletes `.env`. Copy `.env.example` to `.env` and add your API key to start over.
+This removes all generated config files (`.claude/`, `app/CLAUDE.md`, `coding_standards.md`, `.mcp.json`, `scratch.md`) and restores `CLAUDE.md` to its starter state. Your `.env` file is preserved — no need to re-enter your API key.
 
 ---
 

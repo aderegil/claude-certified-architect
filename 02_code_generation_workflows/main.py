@@ -185,7 +185,7 @@ def clear_screen():
 
 
 def show_menu():
-    print(f"{BOLD}Code Generation Workflows — Lab 02{RESET}\n")
+    print(f"{BOLD}Lab 02 — Code Generation Workflows{RESET}\n")
     print(f"  {DIM}1. Run all checks{RESET}")
     print(f"  {DIM}2. Check CLAUDE.md hierarchy{RESET}")
     print(f"  {DIM}3. Check path-specific rules{RESET}")

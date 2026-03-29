@@ -1,11 +1,10 @@
-# config.py - Constants for multi-agent research system
+# config.py - Lab constants and configuration values
 
-MODEL = "claude-sonnet-4-20250514"
-MAX_TOKENS = 4096
-SUBAGENT_MAX_TOKENS = 2048
-
-# Simulated timeout — set to True in Step 5 to trigger search timeout (task 5.3)
-SIMULATE_SEARCH_TIMEOUT = False
-
-# Default topic for deterministic demo runs
-DEFAULT_TOPIC = "impact of artificial intelligence on healthcare"
+# Console colors
+CYAN = "\033[96m"
+GREEN = "\033[92m"
+YELLOW = "\033[93m"
+RED = "\033[91m"
+DIM = "\033[2m"
+BOLD = "\033[1m"
+RESET = "\033[0m"

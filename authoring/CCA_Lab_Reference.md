@@ -47,7 +47,7 @@ For each task statement: Knowledge, Skills, and which lab(s) practice it.
 **Labs:** L3 · L4
 
 **Knowledge**
-- Task tool is the mechanism for spawning subagents; allowedTools must include "Task"
+- Agent tool is the mechanism for spawning subagents; allowedTools must include "Agent" (exam guide says "Task" — renamed to "Agent" in Claude Code v2.1.63; both names are valid)
 - Subagent context must be explicitly provided — no automatic parent context inheritance
 - AgentDefinition: descriptions, system prompts, tool restrictions per subagent type
 - Fork-based session management for divergent approaches from a shared baseline
@@ -55,7 +55,7 @@ For each task statement: Knowledge, Skills, and which lab(s) practice it.
 **Skills**
 - Include complete prior findings directly in subagent prompt
 - Use structured data formats to separate content from metadata (source URLs, page numbers)
-- Spawn parallel subagents via multiple Task tool calls in a single coordinator response
+- Spawn parallel subagents via multiple Agent tool calls in a single coordinator response
 - Design coordinator prompts with goals and quality criteria, not step-by-step procedures
 
 ---
@@ -76,7 +76,7 @@ For each task statement: Knowledge, Skills, and which lab(s) practice it.
 ---
 
 #### 1.5 Apply Agent SDK hooks for tool call interception and data normalization
-**Labs:** L1
+**Labs:** L1 · L3
 
 **Knowledge**
 - PostToolUse hook intercepts tool results for transformation before model processes them
@@ -525,12 +525,13 @@ See Table 1 entries above for full Knowledge and Skills per task.
 
 ### L3 · S3 · Multi-Agent Research System
 **Domains:** D1 · D2 · D5
-**Build:** Coordinator agent with 3 specialized subagents, parallel Task tool spawning, structured claim-source output, simulated timeout with structured error propagation, coverage gap annotation in synthesis.
+**Build:** Coordinator agent with 4 specialized subagents (search, analysis, synthesis, report), parallel Agent tool spawning, PreToolUse/PostToolUse hooks for observability and violation detection, structured claim-source output, simulated timeout with structured error propagation, coverage gap annotation in synthesis.
 
 | Task | Domain | Task Statement |
 |------|--------|---------------|
 | 1.2 | D1 | Orchestrate multi-agent systems with coordinator-subagent patterns |
 | 1.3 | D1 | Configure subagent invocation, context passing, and spawning |
+| 1.5 | D1 | Apply Agent SDK hooks for tool call interception and data normalization |
 | 1.6 | D1 | Design task decomposition strategies for complex workflows |
 | 2.1 | D2 | Design effective tool interfaces with clear descriptions and boundaries |
 | 2.2 | D2 | Implement structured error responses for MCP tools |

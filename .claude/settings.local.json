@@ -9,7 +9,17 @@
       "Bash(git reset:*)",
       "Bash(git read-tree:*)",
       "Bash(git ls-tree:*)",
-      "Bash(ls -d */)"
+      "Bash(ls -d */)",
+      "Bash(find \"C:\\\\Workspaces\\\\GitHub\\\\aderegil\\\\claude-certified-architect\\\\authoring\\\\reference_lab\"\" -type f -name \"* \")",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:docs.claude.com)",
+      "Bash(.venv/Scripts/python.exe -c \"import claude_agent_sdk; print\\(dir\\(claude_agent_sdk\\)\\)\")",
+      "Bash(.venv/Scripts/pip.exe install:*)",
+      "Bash(.venv/Scripts/python.exe -c \":*)",
+      "Bash(.venv/Scripts/python -c \"from claude_agent_sdk import query; help\\(query\\)\")",
+      "Bash(.venv/Scripts/python -c \"from claude_agent_sdk import query; import inspect; print\\(inspect.iscoroutinefunction\\(query\\)\\)\")",
+      "Bash(gh api:*)",
+      "Bash(echo:*)"
     ]
   }
 }

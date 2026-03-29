@@ -101,9 +101,15 @@ python reset.py               # reset and try again
 
 ## Lab 01 — Customer Support Resolution Agent
 
-**Scenario:** S1 | **Domains:** D1 · D2 · D5
+**Scenario:** S1 | **Domains:** D1 · D2 · D5 | **Platform:** Claude Agent SDK
 **Estimated time:** 20–30 min
 **Tasks covered:** 1.1, 1.2, 1.4, 1.5, 2.1, 2.2, 2.3, 5.1, 5.2
+
+### **Scenario Description From Exam Guide**
+> **Scenario 1: Customer Support Resolution Agent**
+> You are building a customer support resolution agent using the Claude Agent SDK. The agent handles high-ambiguity requests like returns, billing disputes, and account issues. It has access to your backend systems through custom Model Context Protocol (MCP) tools (get_customer, lookup_order, process_refund, escalate_to_human). Your target is 80%+ first-contact resolution while knowing when to escalate.
+>
+> **Primary domains:** Agentic Architecture & Orchestration, Tool Design & MCP Integration, Context Management & Reliability
 
 ### What you build
 A customer support agent with 4 MCP-style tools: `get_customer`, `lookup_order`,
@@ -113,9 +119,12 @@ context block.
 
 ### Key concepts practiced
 - Agentic loop: `stop_reason == "tool_use"` → execute → continue; `"end_turn"` → stop
+- Anti-patterns: arbitrary iteration caps as primary stop, natural language termination, text-content completion checks
 - Programmatic prerequisite gate: `process_refund` is blocked until `get_customer` has run
-- PostToolUse hook: intercepts outgoing tool calls, blocks refunds > $500
+- Multi-concern decomposition: distinct items investigated with shared context, unified resolution
+- PostToolUse hook: intercepts outgoing tool calls, blocks refunds > $500; also covers data normalization awareness (timestamps, status codes)
 - Structured error responses: `errorCategory`, `isRetryable`
+- `tool_choice` configuration: `"auto"` (default), `"any"` (guarantee tool call), forced selection (specific tool first)
 - Explicit escalation criteria with few-shot examples in system prompt
 - Persistent `case_facts` block outside summarized history (D5.1)
 
@@ -140,9 +149,15 @@ context block.
 
 ## Lab 02 — Code Generation Workflows
 
-**Scenario:** S2 | **Domains:** D3 · D5
+**Scenario:** S2 | **Domains:** D3 · D5 | **Platform:** Claude Code
 **Estimated time:** 25–35 min
 **Tasks covered:** 1.7, 2.4, 3.1, 3.2, 3.3, 3.4, 3.5, 5.4
+
+### **Scenario Description From Exam Guide**
+> **Scenario 2: Code Generation with Claude Code**
+> You are using Claude Code to accelerate software development. Your team uses it for code generation, refactoring, debugging, and documentation. You need to integrate it into your development workflow with custom slash commands, CLAUDE.md configurations, and understand when to use plan mode vs direct execution.
+>
+> **Primary domains:** Claude Code Configuration & Workflows, Context Management & Reliability
 
 ### What you build
 A configured Claude Code workspace: CLAUDE.md hierarchy, path-specific rules,
@@ -186,39 +201,54 @@ a custom skill with `context:fork`, and a deliberate session lifecycle
 
 ## Lab 03 — Multi-Agent Research System
 
-**Scenario:** S3 | **Domains:** D1 · D2 · D5
+**Scenario:** S3 | **Domains:** D1 · D2 · D5 | **Platform:** Claude Agent SDK
 **Estimated time:** 25–35 min
-**Tasks covered:** 1.2, 1.3, 1.6, 2.1, 2.2, 2.3, 5.1, 5.3, 5.6
+**Tasks covered:** 1.2, 1.3, 1.5, 1.6, 2.1, 2.2, 2.3, 5.1, 5.3, 5.6
+
+### **Scenario Description From Exam Guide**
+> **Scenario 3: Multi-Agent Research System**
+> You are building a multi-agent research system using the Claude Agent SDK. A coordinator agent delegates to specialized subagents: one searches the web, one analyzes documents, one synthesizes findings, and one generates reports. The system researches topics and produces comprehensive, cited reports.
+>
+> **Primary domains:** Agentic Architecture & Orchestration, Tool Design & MCP Integration, Context Management & Reliability
 
 ### What you build
-A coordinator agent that spawns 3 specialized subagents via the `Task` tool:
-a search agent, a document analysis agent, and a synthesis agent. Subagents return
-structured claim-source outputs. One subagent simulates a timeout to exercise
-error propagation.
+A coordinator agent that spawns 4 specialized subagents via the `Agent` tool:
+a search agent, a document analysis agent, a synthesis agent, and a report agent.
+Subagents return structured claim-source outputs. PreToolUse/PostToolUse hooks
+provide real-time observability and violation detection. One subagent simulates
+a timeout to exercise error propagation.
 
 ### Key concepts practiced
-- Hub-and-spoke orchestration: coordinator routes all communication
-- `allowedTools` must include `"Task"` for the coordinator to spawn subagents
+- Hub-and-spoke orchestration: coordinator routes all communication; iterative refinement awareness (re-delegate, re-synthesize)
+- PreToolUse/PostToolUse hooks for real-time tool call observability and role-violation detection
+- `allowedTools` must include `"Agent"` for the coordinator to spawn subagents (exam guide says "Task" — renamed to "Agent" in SDK v2.1.63)
 - Explicit context passing: subagents receive findings in their prompt, not via inheritance
-- Parallel subagent spawning: multiple `Task` calls in a single coordinator response
+- Parallel subagent spawning: multiple `Agent` calls in a single coordinator response
+- Task decomposition: fixed sequential pipelines (prompt chaining) vs dynamic adaptive decomposition
+- `tool_choice` awareness: "auto" (default), "any" (guarantee tool call), forced selection; scoped cross-role tools for high-frequency needs
 - Structured claim-source mappings: `{claim, source_url, excerpt, date}`
 - Structured error propagation: `{failure_type, attempted_query, partial_results, alternatives}`
 - Coverage gap annotation in synthesis output (D5.3)
 - Provenance preserved through synthesis — no attribution loss (D5.6)
+- Content-type rendering: financial data as tables, news as prose, technical as structured lists
 
 ### Files
 ```
 03_multi_agent_research/
   README.md
-  main.py           # coordinator loop + subagent spawning
-  agents.py         # search_agent, analysis_agent, synthesis_agent definitions
+  main.py           # MCP tools, hooks, coordinator query, message display, menu
+  agents.py         # search-agent, analysis-agent, synthesis-agent, report-agent definitions
+  data.py           # mock research data (articles, documents)
+  config.py         # console colors
+  prompts/          # coordinator.txt, search_agent.txt, analysis_agent.txt, synthesis_agent.txt, report_agent.txt
   reset.py
+  reset.zip
   .env.example
   requirements.txt
 ```
 
 ### What to observe
-1. Run a research query — observe parallel subagent Task calls in a single turn
+1. Run a research query — observe parallel subagent Agent calls in a single turn
 2. Trigger the simulated timeout — verify the coordinator receives structured error context
 3. Inspect synthesis output — verify claim-source mappings are preserved
 4. Try an overly narrow topic decomposition — observe incomplete coverage, then fix it
@@ -227,9 +257,15 @@ error propagation.
 
 ## Lab 04 — Developer Productivity Agent
 
-**Scenario:** S4 | **Domains:** D1 · D2 · D3
+**Scenario:** S4 | **Domains:** D1 · D2 · D3 | **Platform:** Claude Agent SDK
 **Estimated time:** 20–30 min
 **Tasks covered:** 1.3, 2.1, 2.4, 2.5, 3.1, 3.2, 3.4, 5.4
+
+### **Scenario Description From Exam Guide**
+> **Scenario 4: Developer Productivity with Claude**
+> You are building developer productivity tools using the Claude Agent SDK. The agent helps engineers explore unfamiliar codebases, understand legacy systems, generate boilerplate code, and automate repetitive tasks. It uses the built-in tools (Read, Write, Bash, Grep, Glob) and integrates with Model Context Protocol (MCP) servers.
+>
+> **Primary domains:** Tool Design & MCP Integration, Claude Code Configuration & Workflows, Agentic Architecture & Orchestration
 
 ### What you build
 An agent that explores a small sample codebase using the built-in tools
@@ -273,9 +309,15 @@ discovery to an Explore subagent, and uses a scratchpad file to persist findings
 
 ## Lab 05 — CI/CD Integration
 
-**Scenario:** S5 | **Domains:** D3 · D4
+**Scenario:** S5 | **Domains:** D3 · D4 | **Platform:** Claude Code
 **Estimated time:** 20–25 min
 **Tasks covered:** 1.6, 3.4, 3.5, 3.6, 4.1, 4.2, 4.6
+
+### **Scenario Description From Exam Guide**
+> **Scenario 5: Claude Code for Continuous Integration**
+> You are integrating Claude Code into your Continuous Integration/Continuous Deployment (CI/CD) pipeline. The system runs automated code reviews, generates test cases, and provides feedback on pull requests. You need to design prompts that provide actionable feedback and minimize false positives.
+>
+> **Primary domains:** Claude Code Configuration & Workflows, Prompt Engineering & Structured Output
 
 ### What you build
 A simulated CI pipeline: Claude Code runs in non-interactive mode with `-p`,
@@ -322,9 +364,15 @@ plus a cross-file integration pass.
 
 ## Lab 06 — Structured Data Extraction
 
-**Scenario:** S6 | **Domains:** D4 · D5
+**Scenario:** S6 | **Domains:** D4 · D5 | **Platform:** Claude API
 **Estimated time:** 25–30 min
 **Tasks covered:** 4.2, 4.3, 4.4, 4.5, 5.5
+
+### **Scenario Description From Exam Guide**
+> **Scenario 6: Structured Data Extraction**
+> You are building a structured data extraction system using Claude. The system extracts information from unstructured documents, validates the output using JavaScript Object Notation (JSON) schemas, and maintains high accuracy. It must handle edge cases gracefully and integrate with downstream systems.
+>
+> **Primary domains:** Prompt Engineering & Structured Output, Context Management & Reliability
 
 ### What you build
 A document extraction pipeline: a JSON schema extraction tool, a

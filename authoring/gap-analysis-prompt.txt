@@ -1,0 +1,28 @@
+LAB GAP ANALYSIS — SCENARIO 03
+Perform a comprehensive gap analysis for Scenario 03 across three layers.
+Output your findings to lab_03_analysis.md, formatted in Markdown.
+Inputs to analyze (in order):
+
+Exam guide — the authoritative source of required coverage
+Lab reference — our mapped reference for Scenario 03
+Lab plan — our defined intent and structure for the lab
+Actual lab (/lab_03/readme.md) — what was implemented
+
+For each layer, identify:
+
+What is present and well-covered ✅
+What is partially covered or underdeveloped ⚠️
+What is missing entirely ❌
+
+Three gap reports to produce:
+
+Lab Reference Gaps — Does the reference fully map to the exam guide and domains?
+Lab Plan Gaps — Does the plan fully reflect the reference and exam requirements?
+Actual Lab Gaps — Does readme.md fully deliver on the plan and reference?
+
+Constraints:
+
+Do not suggest rebuilding anything that already works well
+Focus only on what is missing or incomplete
+Be specific: name the exact topic, task, or concept that is absent
+Keep recommendations actionable — what needs to be added, not replaced
