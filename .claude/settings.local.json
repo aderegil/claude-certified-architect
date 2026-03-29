@@ -5,14 +5,11 @@
       "Bash(python -c \":*)",
       "WebSearch",
       "WebFetch(domain:pypi.org)",
-      "Read(//c/tmp/**)",
-      "Bash(unzip -q \"/c/Workspaces/GitHub/aderegil/claude-certified-architect/authoring/courses/Building with the Claude API/09 Model Context Protocol/cli_project_COMPLETE \\(1\\).zip\")",
-      "Bash(mkdir:*)",
-      "Bash(mkdir -p /tmp/mcp_starter)",
-      "Bash(unzip -q \"/c/Workspaces/GitHub/aderegil/claude-certified-architect/authoring/courses/Building with the Claude API/09 Model Context Protocol/cli_project \\(2\\).zip\")",
-      "Bash(pip install:*)",
-      "Bash(pip index:*)",
-      "Bash(cd:*)"
+      "Bash(git checkout:*)",
+      "Bash(git reset:*)",
+      "Bash(git read-tree:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(ls -d */)"
     ]
   }
 }
