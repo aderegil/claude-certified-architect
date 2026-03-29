@@ -17,6 +17,13 @@ def main():
     else:
         print("Warning: reset.zip not found — cannot restore starter files.")
 
+    # Remove output/ directory if it exists
+    output_dir = os.path.join(lab_dir, "output")
+    if os.path.exists(output_dir):
+        import shutil
+        shutil.rmtree(output_dir)
+        print("Deleted output/")
+
     print("\nReset complete. Follow the README to start again.")
 
 

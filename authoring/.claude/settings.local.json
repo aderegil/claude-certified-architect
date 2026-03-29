@@ -17,7 +17,11 @@
       "WebSearch",
       "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:pypi.org)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "WebFetch(domain:docs.claude.com)",
+      "Bash(powershell.exe -NoProfile -Command '$claudeDir = if \\($env:CLAUDE_CONFIG_DIR\\) { $env:CLAUDE_CONFIG_DIR } else { Join-Path $HOME \".claude\" }; & \\(Join-Path $claudeDir \"hooks/peon-ping/peon.ps1\"\\) toggle 2>&1')",
+      "Bash(powershell.exe -NoProfile -Command \"& '$HOME/.claude/hooks/peon-ping/peon.ps1' toggle\" 2>&1)",
+      "Bash(powershell.exe -NoProfile -Command \"& 'C:\\\\Users\\\\alfredo.de.regil\\\\.claude\\\\hooks\\\\peon-ping\\\\peon.ps1' toggle\" 2>&1)"
     ]
   }
 }

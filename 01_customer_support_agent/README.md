@@ -68,6 +68,8 @@ Type `1` to run the first test query (an order status check for Maria Santos).
 
 **Exam concept:** The agentic loop lifecycle — `stop_reason == "tool_use"` means continue, `"end_turn"` means stop. The model drives decision-making about which tool to call next; there is no pre-configured decision tree. [Task 1.1]
 
+> **Anti-patterns to know for the exam:** The code uses `MAX_LOOP_ITERATIONS` as a safety net, but `stop_reason` is the real termination mechanism — not the iteration cap. The exam tests three anti-patterns: (1) using arbitrary iteration caps as the *primary* stopping mechanism, (2) parsing natural language signals to decide when to stop (e.g., checking if the agent said "I'm done"), (3) checking for assistant text content as a completion indicator. All three bypass `stop_reason`, which is the correct signal. [Task 1.1]
+
 ### Step 4 — Complete the prerequisite gate
 
 #### 4.1 Test
@@ -107,6 +109,17 @@ Re-run with query `2`. The behavior should be the same because the model already
 #### 4.5 Exam concept
 
 Programmatic enforcement (hooks, prerequisite gates) vs prompt-based guidance. When deterministic compliance is required — like identity verification before financial operations — prompt instructions alone are insufficient. [Task 1.4]
+
+#### 4.6 Try a multi-concern request
+
+Type `5` to test a message where Maria Santos asks about two issues at once: a damaged-item refund AND a delivery status check on a different order.
+
+**What to observe:**
+- The agent should investigate both issues — not abandon one to focus on the other
+- It calls `get_customer` once, then uses the shared customer context to handle both `lookup_order` calls and the refund
+- The final response synthesizes both answers into a unified reply
+
+**Exam concept:** Decomposing multi-concern customer requests into distinct items, investigating each using shared context, and synthesizing a unified resolution. [Task 1.4]
 
 ### Step 5 — Complete the PostToolUse hook
 
@@ -150,6 +163,8 @@ Re-run with query `3`.
 
 PostToolUse hooks provide deterministic guarantees that prompt instructions cannot. The hook enforces compliance (refunds > $500 are always blocked) while the structured error response (`errorCategory`, `isRetryable`) gives the agent the information it needs to recover appropriately. [Tasks 1.5, 2.2]
 
+> **Also know for the exam:** PostToolUse hooks have a second use beyond compliance: **data normalization**. Tools from different MCP servers may return dates as Unix timestamps, ISO 8601, or locale strings. A normalization hook can convert all formats to a consistent one before the model processes them. This lab demonstrates the compliance pattern; the exam also tests the normalization pattern. [Task 1.5]
+
 ### Step 6 — Observe escalation criteria and few-shot examples
 
 #### 6.1 Test
@@ -178,9 +193,23 @@ I bought a gift for my friend under my account CUST-1001, and they want to retur
 - This is a policy gap — gift returns with a different recipient are not covered by standard policy
 - The agent should escalate with reason `policy_gap`, not attempt to process the refund
 
-#### 6.5 Exam concept
+#### 6.5 Try a frustrated but resolvable case
+
+Try this query manually:
+
+```
+This is ridiculous! I'm James Chen, CUST-1002. I ordered a keyboard weeks ago and I have no idea where it is. Order ORD-5504.
+```
+
+- ORD-5504 has status `shipped` — the agent can give a concrete update
+- The agent should acknowledge the frustration but resolve the issue, **not** escalate
+- Compare this to query `4` — that customer explicitly asked for a human; this one is just frustrated
+
+#### 6.6 Exam concept
 
 Explicit escalation criteria with few-shot examples in the system prompt. Sentiment-based escalation is an unreliable proxy for case complexity. Few-shot examples are the most effective technique for consistent output when instructions alone produce ambiguous behavior. [Tasks 5.2, 4.2]
+
+> **Also know for the exam:** When a customer lookup (e.g., by name) returns **multiple matches**, the agent should ask for additional identifiers (email, phone) to disambiguate — not pick one heuristically. This lab's data has unique customers, but the exam tests the ambiguous-match scenario. [Task 5.2]
 
 ### Step 7 — Add persistent case_facts with Claude Code
 
@@ -220,6 +249,12 @@ After Claude Code makes the changes, re-run with query `2` (Maria Santos refund)
 
 Persistent fact extraction — amounts, dates, order numbers — into a structured block outside summarized history prevents loss during progressive summarization. Tool results accumulate tokens disproportionately to their relevance; `case_facts` extracts only the fields that matter. The system prompt uses an XML-tagged section with a template variable — no string manipulation. [Task 5.1]
 
+> **Also know for the exam:** Two related context management concepts:
+> - **"Lost in the middle" effect:** Models reliably process information at the beginning and end of long inputs but may miss findings buried in the middle. Place key findings at the beginning of aggregated inputs and use section headers to mitigate this. The `<case_facts>` block at the top of the system prompt is an example of this placement strategy.
+> - **Trimming tool outputs:** In this lab, full tool results are appended to conversation history. In production, you would trim verbose tool outputs to only the relevant fields *before* appending — e.g., keeping only return-relevant fields from a 40-field order lookup. This reduces token accumulation without losing the information that matters.
+>
+> [Task 5.1]
+
 ### Step 8 — Explore tool design and distribution
 
 Before finishing, review how the tools are designed in `tools.py`:
@@ -231,6 +266,20 @@ Before finishing, review how the tools are designed in `tools.py`:
 
 **Exam concept:** Tool descriptions are the primary mechanism the model uses for tool selection. Descriptions must differentiate each tool's purpose, inputs, outputs, and when to use it versus alternatives. Too many tools degrades selection reliability. [Tasks 2.1, 2.3]
 
+#### Additional exam concepts to review
+
+**Single-agent vs multi-agent (Task 1.2):** This lab is a single agent with 4 tools. Lab 03 shows the multi-agent pattern — a coordinator spawning specialized subagents via the Task tool. Know the contrast: a single agent is simpler and appropriate when one role handles all tasks; a coordinator-subagent architecture is needed when subagents require isolated context, different tool sets, or parallel execution.
+
+**System prompt keyword sensitivity (Task 2.1):** Tool descriptions are the primary selection mechanism, but system prompt wording can override them. If the system prompt says "always look up customer orders first," the model may bias toward `lookup_order` even when `get_customer` is the correct first step. Review system prompts for keyword-sensitive instructions that create unintended tool associations.
+
+**Access failures vs valid empty results (Task 2.2):** This lab's tools return errors for not-found cases (`"errorCategory": "validation"`). The exam also tests the distinction between an *access failure* (timeout, service down — needs a retry decision) and a *valid empty result* (query succeeded, no matches — not an error). A search tool returning `{"results": []}` is a success; a search tool timing out is a failure. They require different recovery paths.
+
+**`tool_choice` configuration (Task 2.3):** This lab uses the default `tool_choice: "auto"` — the model decides which tool to call. The exam also tests:
+- `tool_choice: "any"` — guarantees the model calls *some* tool (useful when you need structured output, not conversational text)
+- Forced selection `{"type": "tool", "name": "extract_metadata"}` — ensures a *specific* tool runs first (e.g., before enrichment steps)
+
+Lab 06 exercises `tool_choice: "any"` for guaranteed structured extraction.
+
 ## Reset
 
 To reset the lab and try again:
@@ -239,7 +288,7 @@ To reset the lab and try again:
 python reset.py
 ```
 
-This restores all modified files (`main.py`) to their original starter state with TODOs, and deletes `.env`. Copy `.env.example` to `.env` and add your API key to start over.
+This restores all modified files (`main.py`) to their original starter state with TODOs. Your `.env` file is preserved — no need to re-enter your API key.
 
 ---
 

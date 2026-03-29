@@ -13,9 +13,14 @@ Read this before building or modifying any lab.
 
 Always use exam guide terminology verbatim. Never paraphrase concepts from the guide.
 
-### Reference lab (`reference_lab/`)
+### Completed labs as references
 
-A frozen snapshot of Lab 01 — the canonical example of a completed lab. When building any lab, match the patterns, file structure, and conventions found here. Every "Reference Lab 01" mention in this document points to this folder.
+The completed labs at the repo root are the canonical examples. When building a new lab, study the completed labs that share the same platform or domain overlap:
+
+- `01_customer_support_agent/` — **Agent SDK** reference (D1/D2/D5). Primary reference for tool definitions, agentic loops, interactive menus, system prompts, and file structure.
+- `02_code_generation_workflows/` — **Claude Code** reference (D3/D5). Primary reference for README step progression and configuration-oriented labs.
+
+Every "Lab 01" or "Lab 02" mention in this document refers to these folders.
 
 ### Coding references (`courses/`)
 
@@ -38,7 +43,7 @@ Official Anthropic Academy and course materials. Use them to ground lab code in 
 ### How to use references
 
 1. **Exam guide first** — terminology, task statements, and concepts always come from the exam guide.
-2. **Reference lab for structure** — when unsure how something should look, check `reference_lab/`.
+2. **Completed labs for structure** — when unsure how something should look, check `01_customer_support_agent/` (Agent SDK) or `02_code_generation_workflows/` (Claude Code).
 3. **Courses for code patterns** — when writing lab code, match the patterns from the course materials (tool schemas, API calls, prompt structure).
 4. **Cross-reference** — if a course shows a pattern that contradicts the exam guide terminology, the exam guide wins.
 
@@ -62,7 +67,7 @@ Every README step that asks the student to complete or complement code must use 
 - **X.4 What to observe** — verify it works
 - **X.5 Exam concept** — tie to a specific task statement
 
-Steps where the test comes after the fix (e.g., Claude Code prompts) may skip X.1 and place the test run inside X.3 or X.4. Reference Lab 01 Steps 4–7 as the canonical example.
+Steps where the test comes after the fix (e.g., Claude Code prompts) may skip X.1 and place the test run inside X.3 or X.4. Lab 01 Steps 4–7 as the canonical example.
 
 ### Copy-paste prompts
 
@@ -79,7 +84,7 @@ errorCategory "policy_violation" and isRetryable false.
 
 Prompt text inside fenced code blocks must be manually wrapped at ~65 characters for readability — no single-line prompts. Claude Code handles multi-line pastes correctly.
 
-Never write "ask Claude Code to do X" without providing the literal prompt. Reference Lab 01 Step 7 as the canonical example.
+Never write "ask Claude Code to do X" without providing the literal prompt. Lab 01 Step 7 as the canonical example.
 
 ### Step-by-step detail
 
@@ -128,7 +133,7 @@ claude-certified-architect/
     AUTHOR.md                      ← authoring instructions (this file)
     CCA_*.md/.pdf/.docx            ← exam guide, lab plan, lab reference
     courses/                       ← Anthropic Academy code references
-    reference_lab/                 ← frozen Lab 01 snapshot
+    prompts/                       ← reusable prompts for authoring tasks (e.g., build_lab_prompt.txt)
   01_customer_support_agent/       ← lab folders at root, for students
   02_code_generation_workflows/
   03_multi_agent_research/
@@ -152,6 +157,7 @@ Every lab must contain these files:
   config.py           # constants: model name, thresholds, policy values
   main.py             # starter script — the thing the student runs
   reset.py            # restores starter files from reset.zip
+  prompts/            # all .txt prompt templates (system prompts, agent prompts)
 ```
 
 Additional files (e.g., `tools.py`, `agents.py`, `schema.py`, `sample_docs/`) as specified in the lab plan.
@@ -235,7 +241,7 @@ Apply these to every Python file without exception.
 ```python
 # filename.py - Short description of the file's purpose
 ```
-No author name in file headers. Author credit goes only in the README footer (`*v0.1 — date — Alfredo De Regil*`). Reference Lab 01's files as the canonical example.
+No author name in file headers. Author credit goes only in the README footer (`*v0.1 — date — Alfredo De Regil*`). Lab 01's files as the canonical example.
 
 **Mock data in separate files** — never inline mock data in Python code. Put it in a dedicated data file (e.g., `data.py`, `data.json`) and import/load from there.
 
@@ -261,29 +267,34 @@ response = client.messages.create(messages=messages)
 
 ### API and tools
 
-**Use the Anthropic SDK** — always use the `anthropic` Python SDK (`import anthropic`). Never make manual REST calls to the Claude API.
+**Use the SDK that matches the lab's platform** — the exam guide specifies which platform each scenario uses. Each platform has its own SDK, patterns, and documentation:
 
-**Tool definitions depend on the lab's platform** — the exam guide specifies which platform each scenario uses. Match the tool pattern to the platform:
+| Platform | Package | Import | Docs | Labs |
+|----------|---------|--------|------|------|
+| **Claude Agent SDK** | `pip install claude-agent-sdk` | `from claude_agent_sdk import query, ClaudeAgentOptions, AgentDefinition, HookMatcher` | https://docs.anthropic.com/en/docs/claude-code/sdk | L01, L03, L04 |
+| **Claude API (Client SDK)** | `pip install anthropic` | `import anthropic` | https://docs.anthropic.com/en/api/client-sdks | L06 |
+| **Claude Code** | No SDK — labs configure Claude Code, not code tools | N/A | N/A | L02, L05 |
 
-| Platform | Tool pattern | Reference | Labs |
-|----------|-------------|-----------|------|
-| **Claude API** | Function + companion `_schema` dict (`name`, `description`, `input_schema`) | `courses/Building with the Claude API/06 Tools use with Claude/` | L06 |
-| **Claude Agent SDK / MCP** | `FastMCP` + `mcp.tool()` decorator + Pydantic `Field` for parameter descriptions | `courses/Building with the Claude API/09 Model Context Protocol/cli_project_COMPLETE/` and `10 Anthropic Apps/app_starter/` | L01, L03, L04 |
-| **Claude Code** | No tool definitions — labs configure Claude Code, not code tools | N/A | L02, L05 |
+**The two SDKs are fundamentally different:**
 
-- Do **not** use `@beta_tool` from the `anthropic` SDK — it is experimental and may break between versions.
-- Do **not** mix patterns within a lab — pick the one that matches the platform.
+- **Claude Agent SDK** — Claude handles tools autonomously. You call `query()` with a prompt, `allowed_tools`, and optional `AgentDefinition` subagents. The SDK runs the agentic loop internally using built-in tools (Read, Edit, Bash, Grep, Glob). Hooks are callback functions via `HookMatcher`. MCP servers are configured via `mcp_servers` parameter. Do **not** manually implement `while stop_reason == "tool_use"` loops — the SDK does this for you.
+- **Claude API (Client SDK)** — You implement the tool loop yourself: `client.messages.create()` → check `stop_reason` → execute tools → loop. Tool definitions use companion `_schema` dicts. See `courses/Building with the Claude API/06 Tools use with Claude/` for canonical examples.
 
-> ⚠ **Known debt:** Labs 01 and 03 were built before Agent SDK course materials were available and currently use the `_schema` dict pattern instead of the MCP/decorator pattern. To be migrated in a future pass.
+Do **not** mix patterns: if the lab plan says "Claude Agent SDK", use `claude_agent_sdk`. If it says "Claude API", use `anthropic`.
+
+> ⚠ **Tool rename:** The exam guide refers to the subagent spawning tool as `"Task"` and says `allowedTools` must include `"Task"`. The SDK renamed this to `"Agent"` in Claude Code v2.1.63. **Use `"Agent"` in all lab code** — this is the current SDK name. The exam guide text is outdated on this point. Both names may appear in exam questions; the labs should use the current name.
+
+> ⚠ **Known debt:** Lab 01 was built with the Claude API (Client SDK) pattern — manual agentic loops, `import anthropic`, `_schema` dicts. The exam guide says its scenario (S1) uses the Claude Agent SDK. To be migrated to `claude_agent_sdk` in a future pass. **New labs must use the correct platform from the start — do not copy the Client SDK pattern from Lab 01 for Agent SDK labs.**
 
 ### Prompts
 
-**Prompt template convention** — all system prompts must live in `.txt` files. Never hardcode multi-line prompts in Python code.
+**Prompt template convention** — all system prompts must live in `.txt` files inside a `prompts/` folder. Never hardcode multi-line prompts in Python code.
+- **Location:** `prompts/` subfolder within the lab (e.g., `prompts/system_prompt.txt`, `prompts/coordinator.txt`, `prompts/search_agent.txt`).
 - Use Python `.format()` template variables for any dynamic content — never string concatenation or f-strings.
 - Wrap dynamic sections in XML tags that describe their purpose (e.g., `<case_facts>{case_facts}</case_facts>`, `<search_results>{search_results}</search_results>`).
 - The starter code must load the template, initialize all variables with sensible defaults (e.g., `"No results yet."`), and call `.format()` on every API call. The template is always complete and valid from the first run.
 - When a lab step asks the student to add dynamic content to the prompt, the XML section and template variable should already exist in the `.txt` file — the student only implements the logic that populates the variable.
-- Reference Lab 01's `system_prompt.txt` and `main.py` as the canonical example.
+- Lab 01's `system_prompt.txt` and `main.py` as the canonical example (note: Lab 01 has the prompt at root level, not in `prompts/` — new labs should use the `prompts/` folder).
 
 ### Console output
 
@@ -304,7 +315,16 @@ response = client.messages.create(messages=messages)
 3. Clear screen on startup (right after `load_dotenv()`) and on the `c` command, redisplaying the menu both times.
 4. Support for custom free-text input in addition to the numbered options.
 
-Reference Lab 01's `main.py` as the canonical example.
+Lab 01's `main.py` as the canonical example.
+
+### API error handling
+
+All labs that make API calls (Claude Agent SDK or Claude API) must wrap the main API call in a try/except that catches billing and authentication errors with a clear message. The student should see what went wrong and where to check their balance — not a raw stack trace.
+
+- **Both SDK types**: catch `Exception` around the main API call. Check if the error message contains "credit" or "balance" — if so, print `"API credit balance is too low."` with a link to `https://console.anthropic.com`. Otherwise print the generic error message. This pattern is consistent across both SDKs.
+- **Claude Code labs** (L02, L05): no code to protect — Claude Code handles its own errors.
+
+Lab 01's `main.py` as the canonical example for the Client SDK pattern. Lab 03's `main.py` as the canonical example for the Agent SDK pattern.
 
 ### General
 
@@ -340,16 +360,16 @@ At lab build time, create a `reset.zip` in the lab folder containing **only** th
 - Have `# TODO` sections the student fills in, OR
 - Get modified during the lab (e.g., via Claude Code prompts)
 
-Static files that never change during the lab (`config.py`, `data.py`, `system_prompt.txt`, etc.) should **NOT** be included. Reference Lab 01 as the canonical example.
+Static files that never change during the lab (`config.py`, `data.py`, `system_prompt.txt`, etc.) should **NOT** be included. Lab 01 as the canonical example.
 
 ### reset.py
 
 Every `reset.py` must:
 - Restore starter files by extracting `reset.zip` using `zipfile.extractall`, overwriting modified files
 - Print each restored filename
-- Delete `.env` if it exists
 - Print a confirmation message
 - Be safe to run multiple times
+- Preserve `.env` — the student should not have to re-enter their API key after a reset
 
 ### .env.example
 
@@ -374,6 +394,93 @@ Add any other required env vars with placeholder values and a comment explaining
 - Use exam guide terminology exactly
 - Each step tells the student what to do AND what to observe AND why it matters for the exam
 - No fluff
+
+## README formatting conventions
+
+### Inline code (backticks)
+
+Everything that is a code/config identifier gets backticks:
+
+- Function names: `get_customer`, `fetch_document`
+- Variable names: `stop_reason`, `case_facts`
+- File names/paths: `main.py`, `.env`, `app/sample_app.py`, `CLAUDE.md`
+- Tool names: `web_search`, `Agent`
+- CLI commands: `python main.py`, `claude --resume`
+- Config keys/values: `errorCategory`, `isRetryable`, `context:fork`
+- Special values: `"tool_use"`, `"end_turn"`, `True`, `False`
+- XML tags: `<case_facts>`, `<coverage_gaps>`
+- Directory paths: `~/.claude/CLAUDE.md`, `.claude/rules/`
+- Formats/patterns: `"PROD-XXX"`, `"CUST-1001"`
+
+**Not backticked:** agent role names (use bold), exam domain labels (D1, D2), concept names in prose.
+
+### Bold
+
+- Agent names/roles: **coordinator**, **search-agent**, **synthesis-agent**
+- Section labels: **What to observe:**, **Exam concept:**
+- Key concept introductions: **Hub-and-spoke architecture**, **PostToolUse hooks**
+- Callout labels: **Note:**, **Anti-patterns to know for the exam:**, **Also know for the exam:**
+- Prompt labels: **Prompt for Claude Code:**
+
+### Task references
+
+Format: `[Task X.Y]` or `[Tasks X.Y, X.Z]`
+
+- Always in square brackets with capital "T"
+- Placed at the end of the paragraph or sentence
+- Period goes **outside** the brackets: `...the correct signal. [Task 1.1]`
+- Multiple tasks separated by comma: `[Tasks 1.5, 2.2]`
+
+### Blockquotes
+
+Used for exam awareness callouts that are supplementary to the main step content. Always start with a bold label:
+
+- `> **Note:**` — general supplementary information
+- `> **Anti-patterns to know for the exam:**` — anti-patterns the exam tests
+- `> **Also know for the exam:**` — related exam concepts not directly exercised in the step
+- `> **Note on [topic]:**` — specific clarification (e.g., `> **Note on the Agent tool name:**`)
+
+**Not blockquotes:** main step content, "What to observe" lists, "Exam concept" paragraphs.
+
+### Code blocks
+
+| Content type | Specifier |
+|-------------|-----------|
+| Shell commands | ` ```bash ` |
+| Python code | ` ```python ` |
+| JSON config | ` ```json ` |
+| Markdown file content | ` ```markdown ` |
+| Claude Code prompts | ` ``` ` (no specifier) |
+| Plain output/text | ` ``` ` (no specifier) |
+
+**Prompt for Claude Code format:** Bold label on its own line, followed by blank line, then fenced code block with no language specifier. Prompt text manually wrapped at ~65 characters.
+
+### Headers
+
+| Level | Usage | Format |
+|-------|-------|--------|
+| H1 `#` | Document title | `# Lab 0X — Lab Name` |
+| H2 `##` | Major sections | `## Objective`, `## Exam coverage`, `## Lab guide`, `## Reset` |
+| H3 `###` | Steps | `### Step N — Description` (em-dash) |
+| H4 `####` | Sub-steps | `#### N.Y Title` |
+
+**Never go deeper than H4.** Standard sub-step titles: Test → The problem → The fix → What to observe → Exam concept.
+
+### Lists, tables, emphasis
+
+- **Dash (`-`)** for all unordered lists (never `*`)
+- **Numbered lists** only for ordered sequences
+- **Tables** for exam coverage (Task + Statement) and inline comparisons
+- **Bold** is the primary emphasis. _Italics_ rare, for single-word emphasis using underscores (`_word_`)
+- ALL-CAPS only for acronyms (API, MCP) and Python constants (`MAX_REFUND_AMOUNT`)
+
+### Footer
+
+```markdown
+---
+
+*v0.1 — 3/28/2026 — Alfredo De Regil*
+```
 
 ---
 
