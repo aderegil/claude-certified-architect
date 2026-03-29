@@ -1,3 +1,6 @@
+-- Go to the repo root: claude-certified-architect/ and start claude --
+--
+
 Build Lab 04 following the authoring instructions.
 Read these files first, in this order:
 
