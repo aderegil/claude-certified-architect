@@ -258,6 +258,7 @@ For each task statement: Knowledge, Skills, and which lab(s) practice it.
 **Skills**
 - Select plan mode for microservice restructuring, library migrations affecting many files
 - Select direct execution for single-file bug fix with clear stack trace
+- Combine plan mode for investigation with direct execution for implementation (e.g., plan a library migration, then execute the planned approach)
 - Use Explore subagent for verbose discovery phases to prevent context window exhaustion
 
 ---
@@ -272,7 +273,9 @@ For each task statement: Knowledge, Skills, and which lab(s) practice it.
 
 **Skills**
 - Provide 2-3 concrete input/output examples when prose descriptions produce inconsistent results
+- Provide specific test cases with example input and expected output to fix edge case handling (e.g., null values in migration scripts)
 - Write test suites covering expected behavior and edge cases before implementation
+- Use the interview pattern to surface design considerations in unfamiliar domains before implementing
 - Provide all interacting issues in a single message; iterate sequentially for independent issues
 
 ---
@@ -290,6 +293,7 @@ For each task statement: Knowledge, Skills, and which lab(s) practice it.
 - Run Claude Code in CI with -p flag to prevent interactive input hangs
 - Use --output-format json with --json-schema for machine-parseable findings as inline PR comments
 - Include prior review findings on re-runs — report only new or still-unaddressed issues
+- Provide existing test files in context when generating tests so Claude avoids suggesting scenarios already covered by the suite
 - Document testing standards and fixtures in CLAUDE.md to improve test generation quality
 
 ---
@@ -322,6 +326,7 @@ For each task statement: Knowledge, Skills, and which lab(s) practice it.
 **Skills**
 - Create 2-4 targeted few-shot examples for ambiguous scenarios showing reasoning for chosen action
 - Include examples showing desired output format (location, issue, severity, suggested fix)
+- Provide few-shot examples distinguishing acceptable code patterns from genuine issues to reduce false positives while enabling generalization
 - Add examples demonstrating correct extraction from varied structures (inline citations vs bibliographies)
 
 ---
