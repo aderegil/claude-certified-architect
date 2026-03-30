@@ -248,7 +248,7 @@ For each task statement: Knowledge, Skills, and which lab(s) practice it.
 ---
 
 #### 3.4 Determine when to use plan mode vs direct execution
-**Labs:** L2 · L5
+**Labs:** L2 · L4 · L5
 
 **Knowledge**
 - Plan mode for large-scale changes, multiple approaches, architectural decisions, multi-file edits
@@ -544,7 +544,7 @@ See Table 1 entries above for full Knowledge and Skills per task.
 
 ### L4 · S4 · Developer Productivity Agent
 **Domains:** D1 · D2 · D3
-**Build:** Agent using Read/Grep/Glob for codebase exploration, MCP server in .mcp.json with env var credentials, Explore subagent for verbose discovery, custom slash command, scratchpad files for context persistence.
+**Build:** Agent exploring a sample Python codebase with built-in tools (Grep/Glob/Read), MCP documentation server in `.mcp.json` with env var credentials and enhanced descriptions, `AgentDefinition` Explore subagent with explicit context passing and `allowedTools` restriction, scratchpad file for cross-question persistence, `/explore` skill with `context:fork`, CLAUDE.md with `@import`.
 
 | Task | Domain | Task Statement |
 |------|--------|---------------|

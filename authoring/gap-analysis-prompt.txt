@@ -4,9 +4,9 @@ Output your findings to lab_03_analysis.md, formatted in Markdown.
 Inputs to analyze (in order):
 
 Exam guide — the authoritative source of required coverage
-Lab reference — our mapped reference for Scenario 03
+Lab reference — our mapped reference for Scenario 04
 Lab plan — our defined intent and structure for the lab
-Actual lab (/lab_03/readme.md) — what was implemented
+Actual lab (/lab_04/readme.md) — what was implemented
 
 For each layer, identify:
 
