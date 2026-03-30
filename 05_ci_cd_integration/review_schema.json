@@ -1,0 +1,63 @@
+{
+  "type": "object",
+  "required": ["findings", "summary"],
+  "properties": {
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "file",
+          "line",
+          "issue",
+          "severity",
+          "category",
+          "confidence",
+          "suggested_fix",
+          "reasoning"
+        ],
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "The filename where the issue was found"
+          },
+          "line": {
+            "type": "integer",
+            "description": "The line number of the issue"
+          },
+          "issue": {
+            "type": "string",
+            "description": "Description of the issue found"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "warning", "info"],
+            "description": "How serious the issue is"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["bug", "security", "performance", "style", "maintainability"],
+            "description": "The type of issue"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "low"],
+            "description": "Reviewer confidence that this is a genuine issue"
+          },
+          "suggested_fix": {
+            "type": "string",
+            "description": "Suggested fix for the issue"
+          },
+          "reasoning": {
+            "type": "string",
+            "description": "Why this is a genuine issue, not a false positive"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "Overall summary of the review findings"
+    }
+  }
+}

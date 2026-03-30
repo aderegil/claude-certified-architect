@@ -1,0 +1,32 @@
+INVOICE
+
+Westfield Legal Associates
+2100 Justice Lane, Floor 12
+Chicago, IL 60601
+Phone: (312) 555-0263
+
+Billed To:
+Meridian Healthcare Systems
+1200 Wellness Blvd
+Denver, CO 80202
+
+Invoice: WLA-4410
+Date Issued: March 1, 2025
+Due Date: Per retainer agreement
+PO: N/A
+Payment Terms: Per existing retainer agreement — see section 4.2 of
+               engagement letter dated 09/15/2024, or Net 45 if
+               retainer balance is insufficient.
+
+Service Description                        Hours   Rate      Amount
+--------------------------------------------------------------------
+Contract review — vendor agreements          8.5   $425.00   $3,612.50
+Regulatory compliance consultation          12.0   $425.00   $5,100.00
+HIPAA policy update drafting                 6.0   $375.00   $2,250.00
+Staff training materials — compliance        4.0   $375.00   $1,500.00
+
+                                          Subtotal:  $12,462.50
+                                          Tax:           $0.00
+                                          Total:    $12,462.50
+
+Currency: USD

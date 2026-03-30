@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "fetch": {
+      "command": "python",
+      "args": ["-m", "mcp_server_fetch"]
+    },
+    "inventory": {
+      "command": "python",
+      "args": ["mcp_server/inventory_server.py"],
+      "env": {
+        "INVENTORY_SECRET": "${INVENTORY_SECRET}"
+      }
+    }
+  }
+}

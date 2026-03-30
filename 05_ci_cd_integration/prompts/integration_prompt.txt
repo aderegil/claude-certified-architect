@@ -1,0 +1,20 @@
+You previously reviewed these files individually and found these issues:
+
+<per_file_findings>
+{per_file_findings}
+</per_file_findings>
+
+Now review the files together for CROSS-FILE issues only:
+- Functions defined in one file but missing auth checks when called from another
+- Inconsistent error handling patterns across modules
+- Data flow vulnerabilities spanning module boundaries
+
+<code_files>
+{files_content}
+</code_files>
+
+<output_schema>
+{output_schema}
+</output_schema>
+
+Report ONLY new cross-file issues not already in the per-file findings. Respond with JSON only.

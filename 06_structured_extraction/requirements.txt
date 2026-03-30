@@ -1,0 +1,3 @@
+anthropic
+python-dotenv
+rich>=13.0.0

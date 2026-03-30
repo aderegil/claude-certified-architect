@@ -1,0 +1,21 @@
+Review the following code files for any issues you find.
+Be thorough and check everything.
+
+Check for:
+- Bugs and logic errors
+- Security vulnerabilities
+- Performance issues
+- Code style and naming conventions
+- Missing documentation and type hints
+- Potential maintainability problems
+
+<code_files>
+{files_content}
+</code_files>
+
+<output_schema>
+{output_schema}
+</output_schema>
+
+Report findings as JSON matching the schema above.
+No markdown fences, no explanation — just the JSON.
