@@ -21,7 +21,13 @@
       "Bash(gh api:*)",
       "Bash(echo:*)",
       "Bash(cd:*)",
-      "Bash(pip install:*)"
+      "Bash(pip install:*)",
+      "Bash(mkdir -p \"C:/Workspaces/GitHub/aderegil/claude-certified-architect/05_ci_cd_integration/prompts\")",
+      "Bash(mkdir -p \"C:/Workspaces/GitHub/aderegil/claude-certified-architect/05_ci_cd_integration/pr_files\")",
+      "Bash(cp pipeline.py _starter/pipeline.py)",
+      "Bash(cp prompts/review_prompt.txt _starter/prompts/review_prompt.txt)",
+      "Bash(cp CLAUDE.md _starter/CLAUDE.md)",
+      "Bash(cp:*)"
     ]
   }
 }

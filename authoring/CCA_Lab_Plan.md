@@ -354,7 +354,7 @@ Each step adds a capability that makes the agent more effective:
 ## Lab 05 — CI/CD Integration
 
 **Scenario:** S5 | **Domains:** D3 · D4 | **Platform:** Claude Code
-**Estimated time:** 20–25 min
+**Estimated time:** 25–35 min
 **Tasks covered:** 1.6, 3.4, 3.5, 3.6, 4.1, 4.2, 4.6
 
 ### **Scenario Description From Exam Guide**
@@ -367,31 +367,43 @@ Each step adds a capability that makes the agent more effective:
 A simulated CI pipeline: Claude Code runs in non-interactive mode with `-p`,
 produces structured JSON review output, uses an independent review instance
 (not the generator), and splits a multi-file review into per-file passes
-plus a cross-file integration pass.
+plus a cross-file integration pass. The student iteratively refines the
+review prompt — from vague instructions to explicit criteria to few-shot
+examples — observing progressive improvement in precision.
 
 > **Note:** Like Lab 02, this combines Claude Code CLI usage with a Python
 > orchestration script that simulates the CI pipeline runner.
 
 ### Key concepts practiced
-- `-p` / `--print` flag: non-interactive mode, no hangs in CI
-- `--output-format json` with `--json-schema`: machine-parseable review findings
-- Explicit review criteria: define what to report vs skip (not "be conservative")
-- Few-shot examples in system prompt for consistent output format
-- Session context isolation: independent review instance vs self-review
+- `-p` / `--print` flag: non-interactive mode, no hangs in CI (D3.6)
+- `--output-format json` with `--json-schema`: machine-parseable review findings (D3.6)
+- Direct execution in CI vs plan mode for investigation: CI pipelines use `-p` (direct, non-interactive); developers use plan mode interactively to investigate complex findings (D3.4)
+- Iterative prompt refinement: vague criteria → explicit categorical criteria → few-shot examples, observing progressive improvement at each step (D3.5)
+- Explicit review criteria with severity levels: define what to report (bugs, security) vs skip (minor style), with concrete code examples per severity level (D4.1)
+- Disabling high false-positive categories to restore developer trust (D4.1)
+- Few-shot examples created by the student: format includes file, line, issue, severity, suggested_fix, reasoning — with examples that distinguish acceptable code patterns from genuine issues (D4.2)
+- Session context isolation: independent review instance vs self-review (D4.6)
 - Per-file local pass + cross-file integration pass (task decomposition, D1.6)
-- Sync API for blocking pre-merge vs batch API for overnight jobs (D4.5 awareness)
+- Per-finding confidence scores (high/medium/low) for calibrated review routing (D4.6)
+- Existing test file context in CLAUDE.md to prevent duplicate test suggestions (D3.6)
+- JSON review output formatted as simulated PR comments (D3.6)
+
+> **Note:** Sync API for blocking pre-merge vs batch API for overnight jobs
+> is covered in Lab 06 (D4.5). This lab mentions the distinction for
+> awareness only — no exercise.
 
 ### Files
 ```
 05_ci_cd_integration/
   README.md
-  pipeline.py       # simulates CI runner — invokes Claude Code with -p flag
-  review_schema.json # JSON schema for structured review output
-  CLAUDE.md         # project context: testing standards, review criteria, fixtures
-  sample_pr/        # 3 Python files simulating a pull request
+  pipeline.py        # simulates CI runner — invokes Claude Code with -p flag
+  review_schema.json # JSON schema with severity levels for structured review output
+  CLAUDE.md          # project context: testing standards, review criteria, existing tests
+  pr_files/          # 3 Python files simulating a pull request + 1 existing test file
     auth.py
     orders.py
     utils.py
+    test_utils.py    # existing tests — referenced in CLAUDE.md for test generation context
   reset.py
   .env.example
   requirements.txt
@@ -399,10 +411,18 @@ plus a cross-file integration pass.
 
 ### What to observe
 1. Run `pipeline.py` — verify it does not hang (non-interactive mode works)
-2. Inspect JSON output — verify it matches the schema
-3. Compare: run with vague criteria ("be conservative") vs explicit criteria — see false positive difference
-4. Compare: single-pass review of all 3 files vs per-file + integration pass — see consistency difference
-5. Run review twice on same files — verify second run only reports new issues
+2. Inspect JSON output — verify it matches the schema, including severity levels per finding
+3. **Iterative refinement loop (D3.5):**
+   a. Run review with vague criteria ("be conservative") — count false positives
+   b. Replace with explicit categorical criteria (what to report vs skip) — observe fewer false positives
+   c. Add 2-3 few-shot examples showing acceptable patterns vs genuine issues — observe further improvement
+4. Disable a high false-positive category (e.g., naming conventions) — observe remaining output is higher quality and more trustworthy (D4.1)
+5. Compare: single-pass review of all 3 files vs per-file + integration pass — see consistency difference (D1.6)
+6. Inspect per-finding confidence scores — filter by confidence, observe low-confidence findings have higher false positive rate (D4.6)
+7. Run review twice on same files — verify second run only reports new issues (D3.6)
+8. Add `test_utils.py` reference to CLAUDE.md — run test generation and observe suggestions avoid duplicating existing test scenarios (D3.6)
+9. Format JSON review output as simulated PR inline comments — observe how structured output maps to developer-facing feedback (D3.6)
+10. **Plan mode contrast (D3.4):** Run Claude Code interactively to investigate a complex finding using plan mode — contrast CI's automated direct execution with the developer's exploratory workflow
 
 ---
 

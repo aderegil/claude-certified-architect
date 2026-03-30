@@ -29,12 +29,21 @@ Tracked items for after all 6 labs are built.
 
 - [ ] Backfill Lab Plan with detailed format (same as Lab 01)
 
+## Labs 01, 02, 03 — Add _starter/ directories
+
+- [ ] Consider adding `_starter/` folders with `build_reset.py` to labs 1-3 (Labs 4 and 5 already have them). Low priority — mainly useful during active debugging, so may not be worth it for labs that are already stable.
+
 ## Labs 03, 04 — Rich Markdown Rendering
 
 - [ ] Use `rich` to render heavy markdown output (research reports, exploration summaries) instead of raw ANSI — applies to labs that produce structured markdown from the agent
 - [ ] Pattern: `from rich.markdown import Markdown` + `from rich.console import Console` → `console.print(Markdown(text))`
 - [ ] Add `rich` to `requirements.txt` for affected labs
 - [ ] Update `AUTHOR.md` console output conventions to document when to use `rich` vs ANSI codes
+
+## All Labs — Rich Spinner for Wait States
+
+- [ ] Add a `rich` spinner (e.g., `console.status("Reviewing files...")`) in labs where the user should just wait while the agent works — gives visual feedback instead of a frozen terminal
+- [ ] Applies to any lab step that calls Claude API / Claude Code and blocks for multiple seconds
 
 ## All Labs — Startup Banner
 
@@ -46,6 +55,12 @@ Tracked items for after all 6 labs are built.
 - [ ] Consolidate setup into Step 0 — all pre-execution tasks (open lab folder, create venv, configure `.env`, `pip install`, launch Claude Code) should be a single Step 0, not spread across Steps 0-3
 - [ ] Update `CCA_Lab_Plan.md` README template to reflect the consolidated Step 0 convention
 - [ ] Update `AUTHOR.md` README structure section to match
+
+## All Labs — Realistic Timing Pass
+
+- [ ] Run each lab end-to-end as a typical student and record actual elapsed time per step
+- [ ] Update Lab Plan estimated times to reflect real measurements (current estimates are guesses)
+- [ ] Flag any lab that exceeds a reasonable session length and identify steps to trim or split
 
 ## Lab Plan — General
 

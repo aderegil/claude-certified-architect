@@ -19,7 +19,7 @@
   5. Review lab builder output for exam alignment
 
   Status of completed work:
-  - Labs 01, 02, 03 exist. Gap analyses done for all three.
+  - Labs 01, 02, 03, 04 exist. Gap analyses done for all those.
   - Lab 01: All gaps fixed (README notes + code changes)
   - Lab 02: Gap analysis done (gap-analysis-02.md), fixes NOT
     applied yet — 11 gaps, biggest is fork session exercise
@@ -28,7 +28,7 @@
     API error handling convention, README formatting conventions,
     reset.py preserves .env
   - Lab Plan and Lab Reference updated for all three labs
-  - Labs 04, 05, 06 not yet built
+  - Labs 05, 06 not yet built
 
   Key files to read first:
   - authoring/AUTHOR.md — all conventions

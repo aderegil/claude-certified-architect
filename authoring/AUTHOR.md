@@ -362,6 +362,15 @@ At lab build time, create a `reset.zip` in the lab folder containing **only** th
 
 Static files that never change during the lab (`config.py`, `data.py`, `system_prompt.txt`, etc.) should **NOT** be included. Lab 01 as the canonical example.
 
+### _starter/ directory
+
+Keep a `_starter/` folder in each lab containing the canonical copies of all files that are modified during the lab (the same files that go into `reset.zip`). This folder is for **authoring and debugging only** — it lets the author inspect or diff starter state without extracting the zip. It includes a `build_reset.py` script that rebuilds `reset.zip` from its contents.
+
+`_starter/` is not referenced by the README or by students. It exists purely so the author can:
+- See the starter state of every modified file at a glance
+- Rebuild `reset.zip` after editing a starter file
+- Diff working files against their starter versions during testing
+
 ### reset.py
 
 Every `reset.py` must:
