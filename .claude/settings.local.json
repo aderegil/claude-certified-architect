@@ -19,7 +19,9 @@
       "Bash(.venv/Scripts/python -c \"from claude_agent_sdk import query; help\\(query\\)\")",
       "Bash(.venv/Scripts/python -c \"from claude_agent_sdk import query; import inspect; print\\(inspect.iscoroutinefunction\\(query\\)\\)\")",
       "Bash(gh api:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(cd:*)",
+      "Bash(pip install:*)"
     ]
   }
 }

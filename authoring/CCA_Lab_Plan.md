@@ -258,7 +258,7 @@ a timeout to exercise error propagation.
 ## Lab 04 — Developer Productivity Agent
 
 **Scenario:** S4 | **Domains:** D1 · D2 · D3 | **Platform:** Claude Agent SDK
-**Estimated time:** 20–30 min
+**Estimated time:** 25–35 min
 **Tasks covered:** 1.3, 2.1, 2.4, 2.5, 3.1, 3.2, 3.4, 5.4
 
 ### **Scenario Description From Exam Guide**
@@ -268,42 +268,86 @@ a timeout to exercise error propagation.
 > **Primary domains:** Tool Design & MCP Integration, Claude Code Configuration & Workflows, Agentic Architecture & Orchestration
 
 ### What you build
-An agent that explores a small sample codebase using the built-in tools
-(Read, Grep, Glob), integrates an MCP server via `.mcp.json`, delegates verbose
-discovery to an Explore subagent, and uses a scratchpad file to persist findings.
+A developer productivity agent that helps explore a sample Python codebase.
+The agent starts with built-in tools (Grep, Glob, Read), adds an MCP documentation
+server with enhanced descriptions, delegates deep exploration to a defined
+`AgentDefinition` subagent, persists findings to a scratchpad file, and gets
+packaged as a Claude Code skill with `context:fork` for team reuse.
+
+### Narrative arc
+The student is onboarding onto a legacy codebase and needs to understand it fast.
+Each step adds a capability that makes the agent more effective:
+
+1. **Explore with built-in tools** — learn which tool does what
+2. **Add an MCP server** — give the agent richer external context
+3. **Define an Explore subagent** — let the agent go deep without losing focus
+4. **Add a scratchpad** — let the agent remember across questions
+5. **Package it for the team** — skill + CLAUDE.md for repeatability
 
 ### Key concepts practiced
-- Grep (content search) vs Glob (file path patterns) — tool selection discipline
-- Edit fallback: when anchor text is non-unique, use Read + Write instead
-- Incremental codebase understanding: Grep entry points → Read imports → trace flows
-- MCP server config in `.mcp.json` with `${ENV_VAR}` expansion for credentials
-- Project-level vs user-level MCP server scoping
-- Explore subagent: isolates verbose discovery, returns summary to main agent
-- Scratchpad file: agent writes findings to `scratch.md`, reads it on next question (D5.4)
+- **Grep vs Glob selection discipline:** Grep for content search (find callers of a function), Glob for file path patterns (find test files) [Task 2.5]
+- **Edit fallback:** when anchor text is non-unique, use Read + Write instead of Edit [Task 2.5]
+- **Incremental codebase understanding:** Grep entry points → Read imports → trace flows [Task 2.5]
+- **Function usage tracing:** identify all exported names in a wrapper module, then search each across the codebase [Task 2.5]
+- **MCP server configuration:** project-level `.mcp.json` with `${ENV_VAR}` expansion for credentials; project-level vs user-level scoping [Task 2.4]
+- **MCP tool description enhancement:** improve a tool description so the agent prefers the MCP tool over a built-in alternative — demonstrates descriptions as the primary tool selection mechanism [Tasks 2.1, 2.4]
+- **MCP resources awareness:** content catalogs that reduce exploratory tool calls (exam note, not hands-on) [Task 2.4]
+- **Community MCP servers:** prefer existing servers for standard integrations; reserve custom for team-specific workflows (exam note) [Task 2.4]
+- **`AgentDefinition` configuration:** description, system prompt, and `allowedTools` restriction for the Explore subagent [Task 1.3]
+- **Explicit context passing:** subagent receives prior findings in its prompt — no automatic inheritance [Task 1.3]
+- **Explore subagent isolation:** verbose discovery output stays out of main agent context; programmatic equivalent of plan mode's discovery phase [Tasks 1.3, 3.4, 5.4]
+- **Plan mode vs direct execution awareness:** when to use plan mode (large-scale, multi-file) vs direct (single-file, clear scope); Explore subagent as the SDK equivalent [Task 3.4]
+- **Scratchpad persistence:** agent writes findings to `scratch.md`, reads it on subsequent questions to counteract context degradation [Task 5.4]
+- **Context degradation awareness:** agent loses specifics after extended sessions; scratchpad and `/compact` as mitigations [Task 5.4]
+- **Crash recovery awareness:** structured state exports (manifests) for coordinator resume (exam note, not hands-on) [Task 5.4]
+- **Custom skill with `context:fork`:** `/explore` skill that runs codebase analysis in an isolated sub-agent, keeping verbose output from polluting main conversation [Task 3.2]
+- **`allowed-tools` restriction:** skill frontmatter restricts which tools the skill can use [Task 3.2]
+- **CLAUDE.md with `@import`:** lab's CLAUDE.md imports a coding conventions file; light demonstration of hierarchy and modular organization [Task 3.1]
 
 ### Files
 ```
 04_developer_productivity/
+  .gitignore
+  CLAUDE.md           # lab-specific instructions, uses @import for conventions file
   README.md
-  main.py           # agent loop with built-in tool dispatch
-  mcp_config/
-    .mcp.json       # sample MCP server config with env var expansion
-  sample_codebase/  # small Python project for the agent to explore
-    app.py
-    utils.py
+  config.py           # model name, colors, constants
+  main.py             # agent setup: built-in tools, MCP config, subagent, scratchpad
+  agents.py           # Explore subagent AgentDefinition
+  tools.py            # MCP documentation server tool definitions
+  data.py             # mock project documentation (API docs, architecture notes)
+  prompts/
+    system_prompt.txt       # main agent system prompt
+    explore_agent.txt       # Explore subagent system prompt
+  storefront/                     # small Python project for the agent to explore
+    app.py                        # main application, imports from utils and api/
+    models.py                     # data models: User, Order, Product
+    utils.py                      # re-exports validate_email, format_currency from models
+    api/
+      routes.py                   # API endpoints calling functions from app and utils
+      middleware.py               # auth middleware with duplicate pattern strings
     tests/
       test_app.py
+      test_models.py
+      test_routes.py
+  .claude/
+    conventions.md          # coding conventions file (imported by CLAUDE.md)
+    commands/
+      explore.md            # /explore skill with context:fork + allowed-tools
   reset.py
+  reset.zip
   .env.example
   requirements.txt
 ```
 
 ### What to observe
-1. Ask the agent to find all callers of a function — verify it uses Grep, not Read
-2. Ask it to find all test files — verify it uses Glob
-3. Trigger a non-unique Edit — verify it falls back to Read + Write
-4. Observe the Explore subagent keeping verbose output out of main context
-5. Check `scratch.md` after a session — verify findings persisted correctly
+1. Ask the agent to find all test files — verify it uses Glob, not Read or Grep
+2. Ask it to find all callers of `validate_email` — verify it uses Grep
+3. Ask it to trace `validate_email` through `utils.py` — verify it identifies the re-export and searches each name
+4. Trigger a non-unique Edit on `middleware.py` — verify fallback to Read + Write
+5. Run a query where both the MCP docs tool and Grep could answer — observe tool preference before and after description enhancement
+6. Run the Explore subagent on a complex question — verify verbose output stays isolated and findings return to main agent
+7. Ask multiple questions, then a follow-up requiring earlier findings — verify `scratch.md` persists context
+8. Run the `/explore` skill — verify `context:fork` keeps output isolated from main session
 
 ---
 
