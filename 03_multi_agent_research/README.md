@@ -52,6 +52,16 @@ pip install -r requirements.txt
 
 ### Step 3 — Run the starter code and observe the coordinator
 
+#### 3.1 Orient yourself
+
+Before running, open these files to understand the starter design:
+
+- **`agents.py`** — four `AgentDefinition` entries: **search-agent**, **analysis-agent**, **synthesis-agent**, **report-agent**. Each has a description, system prompt path, and tool restrictions (currently empty — you will restrict them in Step 4).
+- **`main.py`** — find the `hooks` list and the `query()` call. The hooks intercept every tool call for logging; `query()` runs the coordinator with the Agent SDK's managed agentic loop (no manual `while` loop needed).
+- **`prompts/coordinator.txt`** — the coordinator's system prompt that controls delegation and context passing.
+
+#### 3.2 Run
+
 ```bash
 python main.py
 ```

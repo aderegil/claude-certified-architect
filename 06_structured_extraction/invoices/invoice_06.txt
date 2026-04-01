@@ -1,0 +1,32 @@
+RECHNUNG / INVOICE
+
+Schmidt & Weber Ingenieurgesellschaft mbH
+Friedrichstraße 89
+10117 Berlin, Deutschland
+Tel: +49 30 555 01234
+
+Kunde / Customer:
+Meridian Healthcare Systems
+1200 Wellness Blvd
+Denver, CO 80202, USA
+
+Rechnungsnummer: SW-2025-0087
+Rechnungsdatum: 15/03/2025
+Fälligkeitsdatum: 14/04/2025
+Bestellnummer: PO-9105
+Zahlungsbedingungen: 30 Tage netto
+
+Beschreibung                              Menge    Preis       Betrag
+----------------------------------------------------------------------
+Biomedical equipment calibration            3    €2.450,00    €7.350,00
+Technical documentation translation         1    €1.875,00    €1.875,00
+On-site installation supervision (days)     4      €980,00    €3.920,00
+
+                                    Zwischensumme:  €13.145,00
+                                    MwSt (19%):      €2.497,55
+                                    Gesamtbetrag:   €15.642,55
+
+Währung / Currency: EUR
+
+Bitte überweisen Sie den Betrag innerhalb von 30 Tagen.
+Please remit payment within 30 days.

@@ -1,0 +1,33 @@
+                         INVOICE
+
+BrightPath Office Supplies
+333 Commerce Way
+Portland, OR 97205
+Tel: (503) 555-0147
+
+Customer: Meridian Healthcare Systems
+Address: 1200 Wellness Blvd, Denver, CO 80202
+
+Invoice No: BPS-2025-0156
+Date: February 20, 2025
+Due Date: March 22, 2025
+PO#: PO-8901
+Terms: Net 30
+
++------------------------------------------+-----+----------+----------+
+| Item Description                         | Qty | Price    | Total    |
++------------------------------------------+-----+----------+----------+
+| Ergonomic desk chair (Model EX-400)      |   6 | $389.99  | $2,339.94|
+| Standing desk converter                  |   6 | $274.50  | $1,647.00|
+| Monitor arm (dual mount)                 |   6 |  $89.99  |  $539.94 |
+| Cable management kit                     |   6 |  $24.99  |  $149.94 |
++------------------------------------------+-----+----------+----------+
+
+                                  Subtotal:    $4,676.82
+                                  Sales Tax (7.5%): $350.76
+                                  Invoice Total: $5,037.58
+
+NOTE: The total shown above reflects a 10% volume discount
+already applied to unit prices.
+
+Currency: USD

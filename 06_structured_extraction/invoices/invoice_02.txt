@@ -1,0 +1,27 @@
+INVOICE #TF-0892
+
+TechForge Solutions
+8900 Binary Boulevard
+San Jose, CA 95134
+
+To:
+Meridian Healthcare Systems
+1200 Wellness Blvd
+Denver, CO 80202
+
+Date: February 3, 2025
+Due: March 5, 2025
+
+Item                                  Qty     Rate       Total
+----------------------------------------------------------------
+Cloud migration assessment             1    $4,500.00   $4,500.00
+AWS infrastructure setup               1    $6,800.00   $6,800.00
+Data transfer & validation            40      $125.00   $5,000.00
+Post-migration monitoring (days)       5      $950.00   $4,750.00
+
+                                     Subtotal:   $21,050.00
+                                     Tax (0%):       $0.00
+                                     TOTAL:      $21,050.00
+
+Payment Terms: Net 30
+Currency: USD

@@ -7,6 +7,7 @@ Tracked items for after all 6 labs are built.
 ## Lab 01 — Customer Support Resolution Agent
 
 - [ ] Migrate from Claude API (Client SDK) to Claude Agent SDK — exam guide says S1 uses Agent SDK, but Lab 01 was built with `import anthropic` and manual agentic loops
+- [ ] Consider keeping both versions: Client SDK (`main_api.py`) and Agent SDK (`main.py`) — lets students compare manual tool loops vs managed `query()` approach, and both patterns appear on the exam
 - [ ] Backfill Lab Plan with detailed format: narrative arc, key concepts with `[Task X.Y]` tags, detailed file tree, specific "What to observe" items
 
 ## Lab 02 — Code Generation Workflows
@@ -49,6 +50,10 @@ Tracked items for after all 6 labs are built.
 
 - [ ] Add a one-line description below the app title on launch — e.g., `Customer Support Agent — resolves billing disputes, returns, and account issues via MCP tools`
 - [ ] Gives the student immediate context of what the running app does without reading the README
+
+## All Labs — CLAUDE.md Cleanup
+
+- [ ] Remove "Key exam concepts in this lab" section from all lab CLAUDE.md files (Labs 01, 03, 04, 06) — this is pedagogical content for the student, not coding guidance for Claude Code. The README already covers exam concept mapping.
 
 ## All Labs — Consistency Pass
 

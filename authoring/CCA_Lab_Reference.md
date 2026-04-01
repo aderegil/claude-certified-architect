@@ -327,7 +327,8 @@ For each task statement: Knowledge, Skills, and which lab(s) practice it.
 - Create 2-4 targeted few-shot examples for ambiguous scenarios showing reasoning for chosen action
 - Include examples showing desired output format (location, issue, severity, suggested fix)
 - Provide few-shot examples distinguishing acceptable code patterns from genuine issues to reduce false positives while enabling generalization
-- Add examples demonstrating correct extraction from varied structures (inline citations vs bibliographies)
+- Add examples demonstrating correct extraction from varied structures (inline citations vs bibliographies, methodology sections vs embedded details)
+- Add few-shot examples showing correct extraction from documents with varied formats to address empty/null extraction of required fields
 
 ---
 
@@ -343,7 +344,8 @@ For each task statement: Knowledge, Skills, and which lab(s) practice it.
 - Define extraction tools with JSON schemas and extract structured data from tool_use response
 - Set tool_choice: "any" when multiple schemas exist and doc type is unknown
 - Force specific tool to ensure it runs before enrichment steps
-- Design nullable fields to prevent fabrication; use enum "other" + detail string for extensibility
+- Design nullable fields to prevent fabrication; use enum "unclear" for ambiguous cases and "other" + detail string for extensibility
+- Include format normalization rules in prompts alongside strict output schemas to handle inconsistent source formatting
 
 ---
 
@@ -353,11 +355,13 @@ For each task statement: Knowledge, Skills, and which lab(s) practice it.
 **Knowledge**
 - Retry-with-error-feedback: append specific validation errors to prompt on retry
 - Retry is ineffective when required information is absent from source document (not a format error)
+- Feedback loop design: tracking which constructs trigger findings (detected_pattern field) to enable systematic analysis of dismissal patterns
 - Semantic validation errors (values don't sum, wrong field) vs schema syntax errors (eliminated by tool_use)
 
 **Skills**
 - Implement follow-up requests with original document + failed extraction + specific validation errors
 - Identify when retries will be ineffective (info absent) vs effective (format mismatch, structural errors)
+- Add detected_pattern fields to structured findings to enable analysis of false positive patterns when developers dismiss findings
 - Design self-correction flows: calculated_total vs stated_total, add conflict_detected boolean
 
 ---
@@ -373,7 +377,8 @@ For each task statement: Knowledge, Skills, and which lab(s) practice it.
 **Skills**
 - Match API to latency requirement: sync for blocking pre-merge, batch for overnight/weekly analysis
 - Calculate batch submission frequency based on SLA constraints
-- Handle batch failures: resubmit only failed documents by custom_id with modifications
+- Handle batch failures: resubmit only failed documents by custom_id with modifications (e.g., chunking documents that exceeded context limits)
+- Use prompt refinement on a sample set before batch-processing large volumes to maximize first-pass success rates
 
 ---
 
@@ -582,7 +587,7 @@ See Table 1 entries above for full Knowledge and Skills per task.
 
 ### L6 · S6 · Structured Data Extraction
 **Domains:** D4 · D5
-**Build:** Extraction tool with JSON schema (required/optional/nullable/enum+other), validation-retry loop with error feedback, batch submission via Message Batches API with custom_id, field-level confidence scoring and human review routing.
+**Build:** Extraction tool with JSON schema (required/optional/nullable/enum+"unclear"/enum+"other"+detail), few-shot examples for varied document structures, validation-retry loop with error feedback and detected_pattern tracking, self-correction flows (calculated_total vs stated_total, conflict_detected), format normalization rules in extraction prompts, batch submission via Message Batches API with custom_id and prompt refinement on sample before batch, field-level confidence scoring calibrated with labeled validation sets and human review routing.
 
 | Task | Domain | Task Statement |
 |------|--------|---------------|

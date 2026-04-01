@@ -1,0 +1,53 @@
+LAB GAP ANALYSIS — SCENARIO XX
+
+Perform a comprehensive gap analysis for Scenario XX.
+Output your findings to authoring/gap-analysis-XX.md, formatted
+in Markdown.
+
+MODE: Choose based on whether the lab exists yet.
+
+  PRE-BUILD (lab not yet built):
+    Run Layers 1 and 2 only. Skip Layer 3.
+    Apply fixes to the reference and plan based on findings.
+
+  POST-BUILD (lab exists):
+    Run all three layers.
+    Update the existing gap-analysis file with Layer 3.
+
+Inputs to analyze (in order):
+
+  authoring/CCA_Exam_Guide.md — authoritative source of required
+    coverage (read only the task statements listed in the lab plan)
+  authoring/CCA_Lab_Reference.md — our mapped reference for this
+    scenario
+  authoring/CCA_Lab_Plan.md — our defined intent and structure
+  XX_<lab_folder>/README.md — what was implemented (POST-BUILD only)
+
+For each layer, identify:
+
+  What is present and well-covered ✅
+  What is partially covered or underdeveloped ⚠️
+  What is missing entirely ❌
+
+Three gap reports to produce:
+
+  Layer 1 — Lab Reference Gaps
+    Does the reference fully map to the exam guide knowledge and
+    skills for each task this lab covers?
+
+  Layer 2 — Lab Plan Gaps
+    Does the plan fully reflect the reference? Does every task
+    listed as covered have a visible exercise or callout?
+
+  Layer 3 — Actual Lab Gaps (POST-BUILD only)
+    Does the README and code fully deliver on the plan and
+    reference? Check claims against actual code.
+
+Constraints:
+
+  Do not suggest rebuilding anything that already works well
+  Focus only on what is missing or incomplete
+  Be specific: name the exact task, knowledge item, or skill
+  Keep recommendations actionable — what to add, not replace
+  For POST-BUILD: verify README claims against actual code —
+    flag any factual inconsistencies
