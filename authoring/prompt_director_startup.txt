@@ -1,5 +1,6 @@
--- Go to the repo root: claude-certified-architect/ and start claude --
---
+-- Authoring Director Agent --
+-- Go to the repo root: claude-certified-architect/ --
+-- claude --permission-mode auto --effort high --
 
   Session Context — CCA Lab Authoring
 
@@ -19,19 +20,25 @@
   5. Review lab builder output for exam alignment
 
   Status of completed work:
-  - Labs 01, 02, 03, 04 exist. Gap analyses done for all those.
+  - Labs 01–05 exist. Gap analyses done for all.
   - Lab 01: All gaps fixed (README notes + code changes)
   - Lab 02: Gap analysis done (gap-analysis-02.md), fixes NOT
     applied yet — 11 gaps, biggest is fork session exercise
   - Lab 03: All gaps fixed (architecture + README notes)
+  - Lab 04: Complete, gap analysis done
+  - Lab 05: Complete, gap analysis done (gap-analysis-05.md),
+    all issues resolved. Lab Reference and Lab Plan updated
+    with missing skills before build.
   - AUTHOR.md updated with: SDK rename warning (Task→Agent),
     API error handling convention, README formatting conventions,
-    reset.py preserves .env
-  - Lab Plan and Lab Reference updated for all three labs
-  - Labs 05, 06 not yet built
+    reset.py preserves .env, _starter/ directory convention
+  - Lab Plan and Lab Reference updated for all five labs
+  - Lab 06 not yet built
 
   Key files to read first:
   - authoring/AUTHOR.md — all conventions
   - authoring/CCA_Lab_Plan.md — blueprint for all 6 labs
   - authoring/CCA_Lab_Reference.md — task-to-lab mapping
   - authoring/gap-analysis-02.md — pending Lab 02 fixes
+  - authoring/gap-analysis-05.md — Lab 05 analysis (resolved)
+  - authoring/TODO.md — outstanding work across all labs

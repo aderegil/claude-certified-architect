@@ -1,0 +1,36 @@
+-- Lab Builder Agent --
+-- Go to the repo root: claude-certified-architect/ --
+-- claude --permission-mode auto --effort max --
+
+Build Lab 06 following the authoring instructions.
+Read these files first, in this order:
+
+authoring/AUTHOR.md — authoring conventions and how to build a lab
+authoring/CCA_Exam_Guide.md — read the task statements listed in the Lab 06 plan
+authoring/CCA_Lab_Reference.md — cross-reference task coverage
+authoring/CCA_Lab_Plan.md — find the Lab 06 section for scenario, platform, domains, files, and key concepts
+
+Completed labs available as reference:
+01_customer_support_agent/ — Platform: Claude API (import anthropic, agentic loops, tool definitions)
+02_code_generation_workflows/ — Platform: Claude Code (configuration-oriented, CLAUDE.md, skills)
+03_multi_agent_research/ — Platform: Claude Agent SDK (query(), AgentDefinition, hooks)
+04_developer_productivity/ — Platform: Claude Agent SDK (built-in tools, MCP, Explore subagent)
+05_ci_cd_integration/ — Platform: Claude Code (subprocess claude -p, structured output, rich spinner)
+
+Use these for: README structure, file layout, interactive menus, ANSI colors, _starter/ convention. Do not copy SDK or tool patterns from a lab unless its platform matches Lab 06's platform.
+
+Determine the correct SDK before writing any code:
+
+Check the Platform field in CCA_Lab_Plan.md for Lab 06, then follow exactly one path:
+
+Claude Agent SDK → pip install claude-agent-sdk, from claude_agent_sdk import query, ClaudeAgentOptions, AgentDefinition, HookMatcher. Do NOT use import anthropic or manual agentic loops. Read the SDK docs first: https://docs.anthropic.com/en/docs/claude-code/sdk — study patterns for query(), AgentDefinition, HookMatcher, and mcp_servers.
+Claude API → pip install anthropic, import anthropic, manual agentic loops, _schema dict tool definitions. Reference: https://docs.anthropic.com/en/api/client-sdks.
+Claude Code → no SDK needed. The lab configures Claude Code, not code tools.
+
+Output:
+Produce all files in a new 06_<scenario_name>/ folder: README.md and all supporting files, following the structure and conventions from the completed labs above.
+Hard constraints:
+
+Use the Read tool for all file reading
+Do not use git log, git show, or git diff
+Do not read authoring/reference_lab/ — it is outdated and superseded

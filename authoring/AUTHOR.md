@@ -17,10 +17,12 @@ Always use exam guide terminology verbatim. Never paraphrase concepts from the g
 
 The completed labs at the repo root are the canonical examples. When building a new lab, study the completed labs that share the same platform or domain overlap:
 
-- `01_customer_support_agent/` — **Agent SDK** reference (D1/D2/D5). Primary reference for tool definitions, agentic loops, interactive menus, system prompts, and file structure.
+- `01_customer_support_agent/` — **Agent SDK** reference (D1/D2/D5). Primary reference for tool definitions, agentic loops, interactive menus, system prompts, and file structure. ⚠ Currently built with Client SDK patterns (`import anthropic`, `_schema` dicts) — also serves as the **Claude API code pattern reference** for Lab 06 (manual tool loop, `client.messages.create()`, tool result handling). See the known-debt note below.
 - `02_code_generation_workflows/` — **Claude Code** reference (D3/D5). Primary reference for README step progression and configuration-oriented labs.
 
 Every "Lab 01" or "Lab 02" mention in this document refers to these folders.
+
+> **For Lab 06 (Claude API):** Study Lab 01's code patterns for the manual tool loop and `_schema` dict convention, plus `courses/Building with the Claude API/06 Tools use with Claude/` and `courses/anthropics/courses/tool_use/` for canonical tool definitions. Lab 06 is the only lab that legitimately uses the Client SDK — the patterns are correct here, not known debt.
 
 ### Coding references (`courses/`)
 
@@ -35,7 +37,7 @@ Official Anthropic Academy and course materials. Use them to ground lab code in 
 - `Model Context Protocol/` — MCP client/server examples
 
 **GitHub course — anthropics/courses** (https://github.com/anthropics/courses)
-- `tool_use/` — 6-lesson progression: overview, first tool, structured outputs via tool use, complete workflow, tool choice, multi-tool chatbot. Good reference for Labs 01 and 03.
+- `tool_use/` — 6-lesson progression: overview, first tool, structured outputs via tool use, complete workflow, tool choice, multi-tool chatbot. Good reference for Labs 01, 03, and 06.
 - `prompt_engineering_interactive_tutorial/` — step-by-step prompting techniques. Good reference for D4 labs.
 - `prompt_evaluations/` — production eval patterns. Good reference for D4/D5 labs.
 - `anthropic_api_fundamentals/` — SDK basics, streaming, multimodal. Overlaps with Skilljar course.

@@ -51,6 +51,16 @@ pip install -r requirements.txt
 
 ### Step 3 — Run the agent and observe the agentic loop
 
+#### 3.1 Orient yourself
+
+Before running, open these files to understand the starter design:
+
+- **`tools.py`** — four tool functions (`get_customer`, `lookup_order`, `process_refund`, `escalate_to_human`), each paired with a companion `_schema` dict. The schema is what Claude sees; the function is what executes when Claude calls it.
+- **`main.py`** — find the `while` loop. It checks `stop_reason == "tool_use"` to continue and `"end_turn"` to stop. This is the agentic loop you will observe in action.
+- **`system_prompt.txt`** — the system prompt with escalation criteria and a `{case_facts}` template variable (currently empty — you will populate it in Step 7).
+
+#### 3.2 Run
+
 ```bash
 python main.py
 ```

@@ -439,40 +439,78 @@ examples — observing progressive improvement in precision.
 > **Primary domains:** Prompt Engineering & Structured Output, Context Management & Reliability
 
 ### What you build
-A document extraction pipeline: a JSON schema extraction tool, a
-validation-retry loop with error feedback, batch submission via the
-Message Batches API, and a confidence-based human review router.
+A document extraction pipeline: a JSON schema extraction tool with
+few-shot examples, a validation-retry loop with error feedback and
+self-correction, batch submission via the Message Batches API, and
+a confidence-based human review router.
+
+### Narrative arc
+The student is building an invoice extraction system for an accounts payable team.
+Each step adds a capability that makes the extraction more reliable:
+
+1. **Extract with a JSON schema** — define a tool, run it on an invoice, get structured output
+2. **Handle missing fields gracefully** — nullable fields, "unclear" and "other" enums
+3. **Add self-correction** — detect discrepancies between stated and calculated totals
+4. **Add validation and retry** — catch errors, retry with feedback, know when to stop
+5. **Add few-shot examples** — reduce null extraction and hallucination on varied document formats
+6. **Batch-process documents** — submit all docs via Message Batches API, handle failures
+7. **Route to human review** — confidence scores, stratified sampling, per-type accuracy
 
 ### Key concepts practiced
-- `tool_use` with JSON schema: most reliable for schema-compliant structured output
-- `tool_choice: "any"` to guarantee tool call when doc type is unknown
-- Nullable fields to prevent hallucination on absent information
-- Enum `"other"` + detail string pattern for extensible categories
-- Retry-with-error-feedback: append specific validation errors to retry prompt
-- Distinguish retryable errors (format mismatch) from non-retryable (info absent)
-- Message Batches API: `custom_id` correlation, failure resubmission
-- Field-level confidence scores + stratified sampling for human review routing (D5.5)
+- **`tool_use` with JSON schema:** most reliable approach for schema-compliant structured output; eliminates syntax errors but not semantic errors (values in wrong fields, totals that don't sum) [Task 4.3]
+- **`tool_choice` modes:** `"auto"` (may return text), `"any"` (must call a tool — use when doc type is unknown and multiple schemas exist), forced `{"type": "tool", "name": "extract_invoice"}` to ensure a specific extraction runs before optional enrichment [Task 4.3]
+- **Nullable fields:** design schema fields as optional (nullable) when source documents may not contain the information, preventing the model from fabricating values to satisfy required fields [Task 4.3]
+- **Enum design:** `"unclear"` for genuinely ambiguous cases; `"other"` + detail string for extensible categorization [Task 4.3]
+- **Format normalization rules:** include rules in the extraction prompt for inconsistent source formatting (date formats, currency symbols, address layouts) alongside the strict output schema [Task 4.3]
+- **Self-correction validation:** extract both `calculated_total` (sum of line items) and `stated_total` (what the document says) plus a `conflict_detected` boolean for inconsistent source data [Task 4.4]
+- **Retry-with-error-feedback:** append specific validation errors to the retry prompt for model self-correction [Task 4.4]
+- **Retryable vs non-retryable:** format mismatches and structural errors are retryable; information genuinely absent from the source document is not [Task 4.4]
+- **`detected_pattern` field:** track which document patterns trigger extraction failures to enable systematic analysis of recurring issues [Task 4.4]
+- **Few-shot examples for extraction:** 2-4 examples showing correct extraction from documents with varied structures (inline citations vs bibliographies, methodology sections vs embedded details) to reduce hallucination and address empty/null extraction of required fields [Task 4.2]
+- **Few-shot for ambiguous cases:** examples demonstrating reasoning for handling edge cases — when to output `null` vs `"unclear"` vs best-effort extraction [Task 4.2]
+- **Prompt refinement on sample set:** test extraction prompt on a representative sample before batch-processing all documents to maximize first-pass success rates [Task 4.5]
+- **Message Batches API:** 50% cost savings, up to 24-hour processing window, `custom_id` for correlation, no multi-turn tool calling within a single batch request [Task 4.5]
+- **Sync vs batch API selection:** sync API for blocking pre-merge checks; batch API for overnight/weekly analysis; calculate submission frequency from SLA constraints (e.g., 4-hour windows to guarantee 30-hour SLA with 24-hour batch processing) [Task 4.5]
+- **Batch failure handling:** resubmit only failed documents by `custom_id` with modifications (e.g., chunking documents that exceeded context limits) [Task 4.5]
+- **Field-level confidence scores:** model outputs per-field confidence; calibrate review thresholds using labeled validation sets [Task 5.5]
+- **Stratified random sampling:** sample high-confidence extractions for ongoing error rate measurement and novel pattern detection [Task 5.5]
+- **Per-type accuracy analysis:** validate accuracy by document type and field before automating (aggregate 97% accuracy can mask poor performance on specific types) [Task 5.5]
+- **Human review routing:** route low-confidence and ambiguous/contradictory source documents to human review, prioritizing limited reviewer capacity [Task 5.5]
 
 ### Files
 ```
 06_structured_extraction/
+  .gitignore
+  CLAUDE.md           # lab-specific instructions for Claude Code
   README.md
-  main.py           # extraction loop + validation + retry
-  batch.py          # Message Batches API submission + polling + failure handling
-  schema.py         # JSON extraction schema definition
-  sample_docs/      # 10 sample documents with varying formats and missing fields
-    doc_01.txt ... doc_10.txt
+  config.py           # model name, colors, constants, confidence thresholds
+  main.py             # extraction loop + validation + retry + confidence routing
+  batch.py            # Message Batches API submission + polling + failure handling
+  schema.py           # JSON extraction schema definition (tool + schema dict)
+  data.py             # few-shot examples for extraction
+  prompts/
+    extraction_prompt.txt   # system prompt with format normalization rules
+  invoices/           # 7 invoice documents with varying formats and missing fields
+    invoice_01.txt ... invoice_07.txt
+  _starter/           # canonical starter copies (authoring only)
+    build_reset.py
   reset.py
+  reset.zip
   .env.example
   requirements.txt
 ```
 
 ### What to observe
-1. Run extraction on a doc with a missing field — verify model returns `null`, not fabricated value
-2. Trigger a validation error — verify retry prompt includes the specific error
-3. Try a doc where the required info is genuinely absent — verify retry is skipped (non-retryable)
-4. Submit the batch — observe `custom_id` correlation in results
-5. Inspect confidence scores — verify low-confidence extractions are routed to human review
+1. Run extraction on a clean invoice — verify structured output matches the JSON schema [Task 4.3]
+2. Run extraction on a doc with a missing field — verify model returns `null`, not fabricated value [Task 4.3]
+3. Force `extract_invoice` tool — verify it runs before any enrichment step [Task 4.3]
+4. Extract a doc with inconsistent stated vs calculated totals — verify `conflict_detected` is `true` [Task 4.4]
+5. Trigger a validation error — verify retry prompt includes the specific error and the extraction improves [Task 4.4]
+6. Try a doc where the required info is genuinely absent — verify retry is skipped (non-retryable) [Task 4.4]
+7. Run extraction without few-shot examples, then add them — observe fewer null fields and fewer hallucinated values on varied document formats [Task 4.2]
+8. Test extraction on a 3-doc sample, refine the prompt, then submit all 10 via batch — observe `custom_id` correlation in results [Tasks 4.5]
+9. Inspect per-field confidence scores — verify low-confidence extractions are routed to human review [Task 5.5]
+10. Check accuracy by document type — verify that aggregate accuracy is not masking poor performance on a specific type [Task 5.5]
 
 ---
 

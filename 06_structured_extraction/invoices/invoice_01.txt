@@ -1,0 +1,31 @@
+INVOICE
+
+Pinnacle Consulting Group
+742 Innovation Drive, Suite 300
+Austin, TX 78701
+Phone: (512) 555-0198
+
+Bill To:
+Meridian Healthcare Systems
+1200 Wellness Blvd
+Denver, CO 80202
+
+Invoice Number: INV-2025-0421
+Invoice Date: January 15, 2025
+Due Date: February 14, 2025
+Purchase Order: PO-8837
+Payment Terms: Net 30
+
+Description                          Qty    Unit Price    Amount
+-------------------------------------------------------------
+Strategic planning workshop           2     $2,500.00    $5,000.00
+Market analysis report                1     $3,200.00    $3,200.00
+Stakeholder interviews (per hour)    12       $175.00    $2,100.00
+
+                                     Subtotal:   $10,300.00
+                                     Tax (8.25%):    $849.75
+                                     Total:      $11,149.75
+
+Currency: USD
+
+Thank you for your business.

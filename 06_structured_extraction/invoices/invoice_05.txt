@@ -1,0 +1,32 @@
+Golden Plate Catering & Events
+1580 Harvest Lane
+Denver, CO 80220
+Phone: (720) 555-0143
+
+INVOICE
+
+Invoice #: GPC-2025-0185
+Bill To: Meridian Healthcare Systems
+         1200 Wellness Blvd, Denver, CO 80202
+Date: March 10, 2025
+Due: April 9, 2025
+PO: PO-9022
+Terms: Net 30
+
+Description                                          Amount
+-------------------------------------------------------------
+Annual Employee Appreciation Luncheon (150 guests)
+  Buffet service — grilled chicken, salmon,        $3,375.00
+    vegetarian pasta, sides, dessert bar
+  Beverage service — coffee, tea, soft drinks,       $675.00
+    sparkling water
+  Table linens and centerpiece rentals               $450.00
+  Setup and breakdown crew (4 staff, 6 hours)        $720.00
+  Dietary accommodation — 12 gluten-free,            $180.00
+    8 vegan plates prepared separately
+
+                              Subtotal:     $5,400.00
+                              Tax (8.31%):    $448.74
+                              Total Due:    $5,848.74
+
+Currency: USD

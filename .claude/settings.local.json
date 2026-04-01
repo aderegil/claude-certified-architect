@@ -27,7 +27,14 @@
       "Bash(cp pipeline.py _starter/pipeline.py)",
       "Bash(cp prompts/review_prompt.txt _starter/prompts/review_prompt.txt)",
       "Bash(cp CLAUDE.md _starter/CLAUDE.md)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(find C:WorkspacesGitHubaderegilclaude-certified-architectauthoringcourses -type f -name *.py)",
+      "Bash(cp \"C:/Workspaces/GitHub/aderegil/claude-certified-architect/06_structured_extraction/main.py\" \"C:/Workspaces/GitHub/aderegil/claude-certified-architect/06_structured_extraction/_starter/main.py\")",
+      "Bash(cp \"C:/Workspaces/GitHub/aderegil/claude-certified-architect/06_structured_extraction/schema.py\" \"C:/Workspaces/GitHub/aderegil/claude-certified-architect/06_structured_extraction/_starter/schema.py\")",
+      "Bash(curl -sL --max-time 30 https://docs.anthropic.com/en/docs/build-with-claude/message-batches)",
+      "Bash(curl -sL --max-time 30 https://docs.anthropic.com/en/api/creating-message-batches)",
+      "WebFetch(domain:www.anthropic.com)",
+      "WebFetch(domain:claude.com)"
     ]
   }
 }
