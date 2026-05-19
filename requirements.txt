@@ -1,0 +1,4 @@
+azure-ai-inference>=1.0.0
+azure-core>=1.30.0
+python-dotenv>=1.0.0
+rich>=13.7.0
