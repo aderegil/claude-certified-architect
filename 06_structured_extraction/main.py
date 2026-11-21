@@ -148,11 +148,16 @@ def validate_extraction(extraction):
 
 
 def _is_valid_date(date_str):
-    """Check if a string matches YYYY-MM-DD format."""
+    """Check if a string is a valid calendar date in YYYY-MM-DD format."""
+    from datetime import date
     import re
-    match = re.match(r"^\d{4}-\d{2}-\d{2}$", date_str)
-    result = bool(match)
-    return result
+    if not re.match(r"^\d{4}-\d{2}-\d{2}$", date_str):
+        return False
+    try:
+        date.fromisoformat(date_str)
+        return True
+    except ValueError:
+        return False
 
 
 # --- Retry with feedback [Task 4.4] ---

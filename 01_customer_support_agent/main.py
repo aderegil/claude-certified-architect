@@ -87,6 +87,11 @@ def execute_tool(tool_name, tool_input, tool_history):
         }
         return result
 
+    # Pre-check policy violations before mutating REFUNDS_LOG with side effects
+    pre_hook_result = post_tool_use_hook(tool_name, tool_input, None)
+    if isinstance(pre_hook_result, dict) and pre_hook_result.get("error"):
+        return pre_hook_result
+
     raw_result = tool_fn(**tool_input)
 
     # [Task 1.5] — apply PostToolUse hook after execution
@@ -119,8 +124,8 @@ def run_agent(user_message):
     for iteration in range(MAX_LOOP_ITERATIONS):
         print(f"\n{DIM}--- Iteration {iteration + 1} ---{RESET}")
 
-        # [Task 5.1] — format system prompt template with current case_facts
-        system_prompt = system_template.format(case_facts=case_facts)
+        # [Task 5.1] — inject current case_facts safely without breaking on JSON braces
+        system_prompt = system_template.replace("{case_facts}", case_facts)
         print(f"  {DIM}case_facts: {case_facts}{RESET}")
 
         try:
