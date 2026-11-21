@@ -29,6 +29,37 @@ def load_system_prompt():
 # [Task 5.1] — extract verified facts from tool results so the model retains them
 # even when earlier conversation turns are summarized away
 
+def update_case_facts(tool_name, result, facts):
+    """Extract key transactional facts from non-error tool results."""
+    if not isinstance(result, dict) or result.get("error"):
+        return
+    if tool_name == "get_customer":
+        if "customer_id" in result:
+            facts["customer_id"] = result["customer_id"]
+        if "name" in result:
+            facts["customer_name"] = result["name"]
+    elif tool_name == "lookup_order":
+        if "order_id" in result:
+            facts["order_id"] = result["order_id"]
+        if "total" in result:
+            facts["order_total"] = f"${result['total']:.2f}"
+        if "status" in result:
+            facts["order_status"] = result["status"]
+    elif tool_name == "process_refund":
+        if "refund_id" in result:
+            facts["refund_id"] = result["refund_id"]
+        if "amount" in result:
+            facts["refund_amount"] = f"${result['amount']:.2f}"
+        if "status" in result:
+            facts["refund_status"] = result["status"]
+
+
+def format_case_facts(facts):
+    """Render accumulated facts into a compact, deterministic block."""
+    if not facts:
+        return "No facts collected yet."
+    return "; ".join(f"{k}={v}" for k, v in facts.items())
+
 
 # --- Prerequisite gate ---
 # [Task 1.4] — programmatic enforcement: block process_refund until get_customer has run
@@ -50,10 +81,10 @@ def check_prerequisite(tool_name, tool_history):
 # [Task 1.5] — hook intercepts outgoing tool calls for compliance enforcement
 
 def post_tool_use_hook(tool_name, tool_input, tool_result):
-    """Intercept tool results to enforce policy rules.
+    """Intercept tool calls/results to enforce policy rules.
 
     Checks process_refund calls: if the refund amount exceeds MAX_REFUND_AMOUNT,
-    replace the result with a structured error redirecting to escalation.
+    return a structured error redirecting to escalation before committing state.
     """
     if tool_name == "process_refund" and tool_input.get("amount", 0) > MAX_REFUND_AMOUNT:
         result = {
@@ -70,7 +101,7 @@ def post_tool_use_hook(tool_name, tool_input, tool_result):
 # --- Tool execution ---
 
 def execute_tool(tool_name, tool_input, tool_history):
-    """Execute a tool call with prerequisite check and post-use hook."""
+    """Execute a tool call with prerequisite check and policy hook."""
     # [Task 1.4] — check prerequisite gate before execution
     gate_result = check_prerequisite(tool_name, tool_history)
     if gate_result is not None:
@@ -78,7 +109,7 @@ def execute_tool(tool_name, tool_input, tool_history):
         result = gate_result
         return result
 
-    # Execute the tool
+    # Validate tool exists before invoking hooks or mutating state
     tool_fn = TOOL_FUNCTIONS.get(tool_name)
     if not tool_fn:
         result = {
@@ -88,6 +119,11 @@ def execute_tool(tool_name, tool_input, tool_history):
             "message": f"Unknown tool: {tool_name}",
         }
         return result
+
+    # Pre-check policy violations before mutating REFUNDS_LOG with side effects
+    pre_hook_result = post_tool_use_hook(tool_name, tool_input, None)
+    if isinstance(pre_hook_result, dict) and pre_hook_result.get("error"):
+        return pre_hook_result
 
     raw_result = tool_fn(**tool_input)
 
@@ -112,7 +148,8 @@ def run_agent(user_message):
     messages = [{"role": "user", "content": user_message}]
     tool_history = set()
     # [Task 5.1] — case_facts: verified transactional facts injected into system prompt
-    case_facts = "No facts collected yet."
+    facts = {}
+    case_facts = format_case_facts(facts)
 
     print(f"\n{CYAN}{BOLD}{'='*60}")
     print(f"Customer: {user_message}")
@@ -121,8 +158,8 @@ def run_agent(user_message):
     for iteration in range(MAX_LOOP_ITERATIONS):
         print(f"\n{DIM}--- Iteration {iteration + 1} ---{RESET}")
 
-        # [Task 5.1] — format system prompt template with current case_facts
-        system_prompt = system_template.format(case_facts=case_facts)
+        # [Task 5.1] — inject current case_facts safely without breaking on JSON braces
+        system_prompt = system_template.replace("{case_facts}", case_facts)
         print(f"  {DIM}case_facts: {case_facts}{RESET}")
 
         try:
@@ -170,6 +207,8 @@ def run_agent(user_message):
                     console.print(JSON(json.dumps(block.input, indent=2)), style="dim")
 
                     result = execute_tool(block.name, block.input, tool_history)
+                    update_case_facts(block.name, result, facts)
+                    case_facts = format_case_facts(facts)
                     print(f"  {DIM}Result:{RESET}")
                     console.print(JSON(json.dumps(result, indent=2)), style="dim")
 

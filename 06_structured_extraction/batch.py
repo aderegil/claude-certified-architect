@@ -52,7 +52,7 @@ def load_extraction_prompt():
         )
         formatted.append(block)
     few_shot_text = "\n\n".join(formatted)
-    prompt = template.format(few_shot_examples=few_shot_text)
+    prompt = template.replace("{few_shot_examples}", few_shot_text)
     return prompt
 
 

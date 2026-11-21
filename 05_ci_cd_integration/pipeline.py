@@ -145,9 +145,13 @@ def strip_markdown_fences(text):
     """Remove markdown code fences from a string."""
     stripped = text.strip()
     if stripped.startswith("```"):
-        # Remove opening fence (```json or ```)
-        first_newline = stripped.index("\n")
-        stripped = stripped[first_newline + 1:]
+        if "\n" in stripped:
+            first_newline = stripped.index("\n")
+            stripped = stripped[first_newline + 1:]
+        else:
+            stripped = stripped[3:]
+            if stripped.lower().startswith("json"):
+                stripped = stripped[4:].lstrip()
     if stripped.endswith("```"):
         stripped = stripped[:-3].rstrip()
     return stripped

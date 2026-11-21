@@ -1,4 +1,5 @@
 # inventory_server.py - Custom MCP server exposing inventory data
+import json
 import os
 
 from mcp.server.fastmcp import FastMCP
@@ -79,11 +80,15 @@ def search_products(
 @mcp.resource("inventory://products", mime_type="application/json")
 def list_products():
     """Product catalog — lets agents see available inventory without calling a tool."""
+    auth_error = check_auth()
+    if auth_error:
+        return json.dumps(auth_error)
+
     catalog = []
     for pid, product in PRODUCTS.items():
         entry = {"product_id": pid, "name": product["name"], "price": product["price"]}
         catalog.append(entry)
-    return catalog
+    return json.dumps(catalog)
 
 
 if __name__ == "__main__":
